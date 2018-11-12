@@ -71,7 +71,7 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
   res.render('post',{title:'staff'});
 });
  router.get('/Home',requireLogin, function(req, res, next) {
-  res.render('Home',{title:'staff',verify:sess.ver});
+  res.render('Staff_dash',{title:'staff',verify:sess.ver});
 });
   router.get('/err_valid', function(req, res, next) {
     res.render('err_valid',{title:'Faculty_Login'});

@@ -65,7 +65,7 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
   );
   });
  router.get('/Home',requireLogin, function(req, res, next) {
-  res.render('Home',{title:'faculty',verify:sess.ver});
+  res.render('Faculty_dash',{title:'faculty',verify:sess.ver});
 });
 router.get('/complaint',requireLogin, function(req, res, next) {
   res.render('post',{title:'faculty'});

@@ -9,7 +9,7 @@ var app = express();
 var sess;
 
   router.get('/Home', function(req, res, next) {
-    res.render('Home1',{title:'Management'});
+    res.render('mngmnt_dash',{title:'Management'});
   });
   router.get('/err_valid', function(req, res, next) {
     res.render('err_valid');
