@@ -1,0 +1,23 @@
+input[type=text]{
+	font-size: 1.5rem;
+}
+
+.form-group{
+	font-size: 6rem !important;
+}
+
+.btn {
+	font-size: 1.5rem;
+}
+
+select{
+	font-size: 1.5rem;
+	min-width: 50%;
+	padding: .5rem;
+	border-radius: .2rem;
+	outline: none;
+}
+
+select option{
+	font-size: 1.5rem;
+}
