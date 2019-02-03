@@ -24,6 +24,10 @@ $(document).ready(function(){
 		$('.approved-users').slideToggle(500);
 	});
 
+	$('.rejected-users').click(function(){
+		$('.rejected').slideToggle(500);
+	});
+
 	$('.setting-toggle').click(function(){
 		$('.settings').slideToggle(500);
 	});

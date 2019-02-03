@@ -39,10 +39,6 @@ app.config(function($routeProvider){
 		templateUrl: '/Admin/reset-password.ejs'
 	})
 
-	.when('/rejected-users', {
-		templateUrl: '/Admin/rejected-users.ejs'
-	})
-
 	.when('/gcm', {
 		templateUrl: '/Admin/gcm.ejs'
 	})
@@ -77,6 +73,22 @@ app.config(function($routeProvider){
 
 	.when('/approved-faculty', {
 		templateUrl: '/Admin/approved-faculty.ejs'
+	})
+
+	.when('/rejected-students', {
+		templateUrl: '/Admin/rejected-students.ejs'
+	})
+
+	.when('/rejected-parents', {
+		templateUrl: '/Admin/rejected-parents.ejs'
+	})
+
+	.when('/rejected-nonteaching', {
+		templateUrl: '/Admin/rejected-nonteaching.ejs'
+	})
+
+	.when('/rejected-faculty', {
+		templateUrl: '/Admin/rejected-faculty.ejs'
 	})
 
 	.when('/grievance-details', {
