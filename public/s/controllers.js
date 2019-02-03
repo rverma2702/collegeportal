@@ -946,17 +946,6 @@ $window.location.reload();
    
    });
    app.controller('Admin_Rejected_user',function($http,$scope,$window){
-
-
-    $http.get('/Admin/rejected_user').then(function(response){
-        $scope.student=response.result.student;
-        $scope.parent=response.result.parent;
-        $scope.staff=response.result.staff;
-        $scope.faculty=response.result.faculty;
-        $('#loading').hide();
-        $('#rejected_user').fadeIn(500);
-    })
-
     $scope.init=function(user,ev){
         if(user=='faculty')
         {    $scope.msg="user is faculty";
@@ -1018,8 +1007,10 @@ $window.location.reload();
       $mdDialog.show(update).then(function() {
         $window.location.reload();
       });
-    
+
         });
+        
+
 
     }
    })

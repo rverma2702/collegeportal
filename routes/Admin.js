@@ -27,7 +27,8 @@ var smtpTransport = nodemailer.createTransport({
 });
 var mailOptions;
 function requireLogin(req, res, next) {
-  console.log(req.session.active)
+  console.log(req.session.active);
+  console.log('1');
     if (req.session.active==1&&req.session.type=='Admin') { /*if someone is logged in as cell member*/ 
       next(); // allow the next route to run                   
     } else {
@@ -92,7 +93,7 @@ router.post('/update',function(req,res,next){
  });
 
  });
- router.get('/rejected_user',function(req,res,next){
+ router.get('/rejected_user',requireLogin,function(req,res,next){
   console.log(req.query.user);
   if(req.query.user=='student')
 {
