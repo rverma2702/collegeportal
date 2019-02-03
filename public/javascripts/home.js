@@ -317,6 +317,11 @@ $('.closebtn').click(function(){
   $('.heading').delay(500).fadeIn(1000);
 });
 
+$('.forgotpassword').click(function(){
+  $('.forms').fadeOut(500);
+  $('.forgotpass').delay(500).fadeIn(1000);
+});
+
 //scroll reveal for the heading grievance portal....
         window.sr = ScrollReveal();
         sr.reveal('#heading1', {
