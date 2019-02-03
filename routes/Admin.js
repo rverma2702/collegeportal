@@ -362,28 +362,32 @@ data={
   {
     faculty.updateuser(id,newvalue,function(err){
       if(err) throw err;
-      console.log("Successfuly approved ")
+      console.log("Successfuly approved ");
+      res.redirect('/');
     })
   }
   else if(user=='Student')
   {
     Student.updateuser(id,newvalue,function(err){
       if(err) throw err;
-      console.log("Successfuly Rejected ")
+      console.log("Successfuly approved ");
+      res.redirect('/');
     })
   }
   else if(user=='Staff')
   {
     Staff.updateuser(id,newvalue,function(err){
       if(err) throw err;
-      console.log("Successfuly Rejected ")
+      console.log("Successfuly approved ");
+      res.redirect('/');
     })
   }
   else if(user=='Parent')
   {
     Parent.updateuser(id,newvalue,function(err){
       if(err) throw err;
-      console.log("Successfuly Rejected ")
+      console.log("Successfuly approved");
+      res.redirect('/');
     })
   }
   

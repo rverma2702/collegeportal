@@ -945,7 +945,7 @@ $window.location.reload();
 }
    
    });
-   app.controller('Rejected_user',function($http,$scope,$window){
+   app.controller('Admin_Rejected_user',function($http,$scope,$window){
 
 
     $http.get('/Admin/rejected_user').then(function(response){
@@ -956,6 +956,53 @@ $window.location.reload();
         $('#loading').hide();
         $('#rejected_user').fadeIn(500);
     })
+
+    $scope.init=function(user,ev){
+        if(user=='faculty')
+        {    $scope.msg="user is faculty";
+        $http.get('/Admin/rejected_user?user='+'faculty').then(function(response){
+            $scope.users=response.data.info;    
+            $('#loading').hide();
+            $('#rejected_list').fadeIn(500);
+           
+        });
+     
+        }
+        else if(user=='parent')
+        {
+        $scope.msg="user is parent";
+        $http.get('/Admin/rejected_user?user='+'parent').then(function(response){
+            $scope.users=response.data.info;    
+            $('#loading').hide();
+            $('#rejected_list').fadeIn(500);
+           
+        });
+        } 
+         
+         
+         else if(user=='staff')
+         {
+            $scope.msg="user is staff";
+         $http.get('/Admin/rejected_user?user='+'staff').then(function(response){
+            $scope.users=response.data.info;    
+            $('#loading').hide();
+            $('#rejected_list').fadeIn(500);
+           
+        });
+    
+        }
+        else if(user=='student') 
+        {  
+        $scope.msg="user is student";
+         
+        $http.get('/Admin/rejected_user?user='+'student').then(function(response){
+            $scope.users=response.data.info;    
+            $('#loading').hide();
+            $('#rejected_list').fadeIn(500);
+        });
+        }
+    }
+
     $scope.Undo_rejected=function(type,user,ev){
         $scope.form={
             type:type,
