@@ -3,11 +3,11 @@
 		<!--Parent-->
 
 		<h1>Edit Parent Details</h1>
-		<form ng-submit="submit()" class="form-horizontal">
+		<form class="form-horizontal" id="account-details">
 			<div ng-app="grievances" ng-controller="Parent">
 				<div class="form-group">
 					<div class="row">
-						<div class="col-sm-2 col-sm-offset-1">
+						<div class="col-sm-2 offset-sm-1">
 							<label class="control-label"> Name </label>
 						</div>
 						<div class="col-sm-7">
@@ -18,7 +18,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-sm-2 col-sm-offset-1">
+						<div class="col-sm-2 offset-sm-1">
 							<label class="control-label"> Relation </label>
 						</div>
 						<div class="col-sm-7">
@@ -29,7 +29,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-sm-2 col-sm-offset-1">
+						<div class="col-sm-2 offset-sm-1">
 							<label class="control-label"> Course Completion Date</label>
 						</div>
 						<div class="col-sm-7">
@@ -39,7 +39,7 @@
 				</div>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-sm-2 col-sm-offset-1">
+						<div class="col-sm-2 offset-sm-1">
 							<label class="control-label"> Email Id</label>
 						</div>
 						<div class="col-sm-7">
@@ -49,17 +49,17 @@
 				</div>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-sm-2 col-sm-offset-1">
+						<div class="col-sm-2 offset-sm-1">
 							<label class="control-label"> Mobile Number</label>
 						</div>
 						<div class="col-sm-7">
-							<input class="form-control" type="text" ng-model="mobile" readonly>
+							<input class="form-control" type="text" ng-model="mobile" >
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-9 col-sm-offset-3">
-						<button class="btn btn-default" type="submit" id="parent-details">Update</button>
+					<div class="col-sm-9 offset-sm-3">
+						<button class="btn btn-default" type="button" id="parent-details" ng-click="submit()">Update</button>
 					</div>
 				</div>
 
@@ -67,3 +67,9 @@
 
 		</form>
 
+        <div id="loading">
+            <div class="loader">
+            </div>
+            
+            <h1>Loading...</h1>
+        </div>

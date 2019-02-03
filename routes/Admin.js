@@ -9,9 +9,11 @@ var Parent=require('../models/Parentdb');
 var faculty=require('../models/facultydb');
 var Staff=require('../models/staffdb');
 var mngmnt =require('../models/mngmntdb');
+var Member=require('../models/Membersdb');
+var Grv=require('../models/grievancedb');
 var Grvtype=require('../models/grvtypedb');
-var bodyParser = require("body-Parser");
 var session = require('express-session');
+var async=require('async')
 
 var nodemailer = require("nodemailer");
 
@@ -33,7 +35,7 @@ function requireLogin(req, res, next) {
       res.redirect('/'); // or render a form, etc.
     }
   }
-console.log('sucessful');
+console.log('successful');
 var app = express();
 var sess;
   router.get('/Home',requireLogin, function(req, res, next) {
@@ -53,6 +55,415 @@ var sess;
     res.render('view');
   });
 
+router.get('/my-account',function(req,res,next){
+
+  admin.getUserByID(req.session.user,function(err,user){
+if(err) throw err;
+else
+{
+
+  data={
+    email:user.emailid,
+    mobile:user.mobileno,
+    name:user.name
+  };
+  res.send(data);
+}
+
+  });
+});
+
+router.post('/update',function(req,res,next){
+    
+  var id={ _id:sess.user};
+   var newvalues = {$set: 
+     {
+       //gender:req.body.gender,
+      //emailid:req.body.emailid,
+      mobileno:req.body.mobileno
+   }};
+ admin.updateuser(id,newvalues,function(err,isUpdate){
+    if(err) throw err;
+  else
+  {
+    console.log(' successfuly update ');
+    res.redirect('/Admin/Home#!/');
+  }
+ });
+
+ });
+ router.get('/rejected_user',function(req,res,next){
+  console.log(req.query.user);
+  if(req.query.user=='student')
+{
+Student.apprv_find('rejected',function(err,users){
+if(err) throw err;
+else{
+  console.log(users);
+ data={
+   info:users
+ }
+res.send(data);
+}
+})
+}
+else if(req.query.user=='parent')
+{
+Parent.apprv_find('rejected',function(err,users){
+if(err) throw err;
+else{
+  console.log(users);
+ data={
+   info:users
+ }
+res.send(data)
+}//res.end('fetched complete');
+})
+}
+else if(req.query.user=='staff')
+{
+Staff.apprv_find('rejected',function(err,users){
+if(err) throw err;
+else
+{console.log(users);
+  data={
+  info:users
+}
+res.send(data)
+}
+})
+}
+else if(req.query.user=='faculty')
+{
+faculty.apprv_find('rejected',function(err,users){
+if(err) throw err;
+else
+{
+  console.log(users);
+data={
+   info:users
+ };
+res.send(data);
+}
+})
+}
+
+});
+
+
+ router.get('/approve_user',requireLogin,function(req,res,next){//to Display all th Grievance Cell Member 
+  console.log(req.query.user);
+   if(req.query.user=='student')
+{
+ Student.apprv_find('approved',function(err,users){
+ if(err) throw err;
+ else{
+   console.log(users);
+  data={
+    info:users
+  }
+ res.send(data);
+ }
+})
+}
+else if(req.query.user=='parent')
+{
+ Parent.apprv_find('approved',function(err,users){
+ if(err) throw err;
+ else{
+   console.log(users);
+  data={
+    info:users
+  }
+ res.send(data)
+ }//res.end('fetched complete');
+})
+}
+else if(req.query.user=='staff')
+{
+ Staff.apprv_find('approved',function(err,users){
+ if(err) throw err;
+ else
+ {console.log(users);
+   data={
+   info:users
+ }
+res.send(data)
+ }
+})
+}
+else if(req.query.user=='faculty')
+{
+ faculty.apprv_find('approved',function(err,users){
+ if(err) throw err;
+ else
+ {
+   console.log(users);
+data={
+    info:users
+  };
+ res.send(data);
+}
+})
+}
+
+   
+   });
+   router.post('/Deactivate_user',requireLogin,function(req,res,next){
+    var user=req.body.type;
+    var id={emailid:req.body.email};
+    var newvalue={$set:{
+      access:'rejected'}
+    } 
+    console.log(req.body.email);
+    console.log(user)  
+    if(user=='Faculty')
+    {
+      faculty.updateuser(id,newvalue,function(err){
+        if(err) throw err;
+        console.log("Successfuly Rejected Faculty");
+        res.redirect('/');
+      })
+    }
+    else if(user=='Student')
+    {
+
+      Student.updateuser(id,newvalue,function(err){
+        if(err) throw err;
+        console.log("Successfuly Rejected Student")
+        res.redirect('/');
+      })
+    }
+    else if(user=='Staff')
+    {
+      Staff.updateuser(id,newvalue,function(err){
+        if(err) throw err;
+        console.log("Successfuly Rejected Staff");
+        res.redirect('/');
+      })
+    }
+    else if(user=='Parent')
+    {
+      Parent.updateuser(id,newvalue,function(err){
+        if(err) throw err;
+        console.log("Successfuly Rejected Parent");
+        res.redirect('/');
+      })
+    }
+   });
+
+   router.get('/pending_user',requireLogin,function(req,res,next){//to Display all th Grievance Cell Member 
+     console.log(req.query.user);
+      if(req.query.user=='student')
+  {
+    Student.apprv_find('pending',function(err,users){
+    if(err) throw err;
+    else{
+      console.log(users);
+     data={
+       info:users
+     }
+    res.send(data);
+    }
+  })
+  }
+  else if(req.query.user=='parent')
+  {
+    Parent.apprv_find('pending',function(err,users){
+    if(err) throw err;
+    else{
+      console.log(users);
+     data={
+       info:users
+     }
+    res.send(data)
+    }//res.end('fetched complete');
+  })
+  }
+  else if(req.query.user=='staff')
+  {
+    Staff.apprv_find('pending',function(err,users){
+    if(err) throw err;
+    else
+    {console.log(users);
+      data={
+      info:users
+    }
+   res.send(data)
+    }
+  })
+  }
+  else if(req.query.user=='faculty')
+  {
+    faculty.apprv_find('pending',function(err,users){
+    if(err) throw err;
+    else
+    {
+      console.log(users);
+  data={
+       info:users
+     };
+    res.send(data);
+  }
+  })
+  }
+  
+      
+      });
+
+      router.post('/Approve_User',requireLogin,function(req,res,next){
+        var user=req.body.type;
+    var id={emailid:req.body.email};
+    var newvalue={$set:{
+      access:'approved'
+    }
+    }   
+    if(user=='Faculty')
+    {
+      faculty.updateuser(id,newvalue,function(err){
+        if(err) throw err;
+        console.log("Successfuly approved ");
+        res.redirect('/');
+      })
+    }
+    else if(user=='Student')
+    {
+      Student.updateuser(id,newvalue,function(err){
+        if(err) throw err;
+        console.log("Successfuly approved ");
+        res.redirect('/');
+      })
+    }
+    else if(user=='Staff')
+    {
+      Staff.updateuser(id,newvalue,function(err){
+        if(err) throw err;
+        console.log("Successfuly approved ");
+        res.redirect('/');
+      })
+    }
+    else if(user=='Parent')
+    {
+      Parent.updateuser(id,newvalue,function(err){
+        if(err) throw err;
+        console.log("Successfuly approved ");
+        res.redirect('/');
+      })
+    }
+      });
+ router.post('/undo_rejected',requireLogin,function(req,res,next){
+  var user=req.body.type;
+  var id={emailid:req.body.email};
+  var newvalue={$set:{
+    access:'approved'
+  }
+  }   
+  if(user=='Faculty')
+  {
+    faculty.updateuser(id,newvalue,function(err){
+      if(err) throw err;
+      console.log("Successfuly approved ")
+    })
+  }
+  else if(user=='Student')
+  {
+    Student.updateuser(id,newvalue,function(err){
+      if(err) throw err;
+      console.log("Successfuly Rejected ")
+    })
+  }
+  else if(user=='Staff')
+  {
+    Staff.updateuser(id,newvalue,function(err){
+      if(err) throw err;
+      console.log("Successfuly Rejected ")
+    })
+  }
+  else if(user=='Parent')
+  {
+    Parent.updateuser(id,newvalue,function(err){
+      if(err) throw err;
+      console.log("Successfuly Rejected ")
+    })
+  }
+  
+ });
+      router.get('/All_Grievances',requireLogin,function(req,res,next){
+        console.log('hiii');
+       query=req.query.active;
+        Grv.grv_all(query,function(err,result)
+        {
+            if(err) throw err;
+            console.log(result);
+            var data={
+              info:result
+            }
+      
+        res.send(data);
+    
+            }
+    
+        );
+        });
+  
+      router.get('/GRV',requireLogin,function(req,res,next){//For finding a particular Grievance information
+        //console.log('hii'); 
+        console.log(req.query.grv_id);
+           Grv.grv_findbyid(req.query.grv_id,function(err,result)
+        {
+            if(err) throw err;
+            console.log(result);
+            var wqe={
+            info:result
+        }
+        var data=result
+        res.send(data);
+            }
+        
+      );
+        });
+        router.post('/GRV_delete',requireLogin,function(req,res,next){
+          console.log(req.query.grv_id);
+          var id={grv_id:req.query.grv_id}
+          var newvalues = {$set: 
+               {
+                 active:0 
+                     
+                }
+              };
+   
+           Grv.update_grv(id,newvalues,function(err,isUpdate){
+               if(err) throw err;
+             else
+             {
+               console.log(' successfuly update ');
+               res.redirect('/Members/Grievances');
+             }
+            }); 
+           
+        })
+
+ router.get('/GCM_List',requireLogin,function(req,res,next){//to Display all th Grievance Cell Member 
+  Member.find_all(function(err,result){
+    if(err) throw err;
+    else{
+      console.log(result);
+      var data={
+        info:result
+      }
+    res.send(data);
+  }
+  })
+  });
+  router.post('/GCM_Deactivate',requireLogin,function(req,res,next){
+    console.log(req.body.email);
+    console.log('hii');
+    Member.Delete_Gcm(req.body.email,function(err){
+      if(err) throw err;
+      console.log('GCM  Deactivated');
+      res.redirect('/');
+    });
+  })
 router.get('/approve',requireLogin,function(req,res,next){
   //var x=req.query.status;
   if(req.query.type=='Student')
@@ -104,6 +515,41 @@ res.render('post1',{
 }
 
 });
+router.get('/Grievances',function(req,res,next){// for all pending grievances 
+  console.log('hii'); 
+  active=req.query.param;
+    //console.log(req.query.id)body
+      Grv.grv_findforAdmin(function(active,err,result)
+  {
+      if(err) throw err;
+     // console.log(result);
+      var data={
+      info:result
+  }
+  res.send(data);
+      });
+  });
+  
+  router.post('delete_grv',function(req,res,next){//for deleting any grievances
+var newvalues={
+  active:0
+};
+    Grv.update_grv(req.body.id,newvalues,function(err){
+      if(err)
+      throw errror;
+    })
+  });
+
+  router.post('deactivate_grvtype',function(req,res,next){//for deleting any grievances
+    var newvalues={
+      active:false
+    };
+    Grvtype.update_grvtype(req.body.id,newvalues,function(err){
+          if(err)
+          throw errror;
+        })
+      });
+
 
 router.get('/existing_request',requireLogin,function(req,res,next){
   console.log(req.query.email);
@@ -466,6 +912,49 @@ if((req.body.mngmnt)=='on')
 
 
   });
+
+ router.post('/password_reset',function(req,res,next){
+  var cpass=req.body.current_password;
+  var  npass=req.body.new_password;
+  var npass2=req.body.new_password1;
+ 
+
+admin.getinfobyID(req.session.user,function(err, user){
+  if(err) throw err;
+  if(!user){
+      console.log("unknown user");
+      res.redirect('/faculty/unknw');
+      return;
+  }
+
+        admin.comparePassword(cpass, user.password, function(err, isMatch){
+            if(err) throw err;
+              if(isMatch){
+
+                  var id={ _id:sess.user };
+                  //console.log('id is '+sess.user.id);
+                  
+                admin.update_password(id,npass,function(err){
+                   if(err) throw err;
+                 else
+                 {
+                   console.log(' password updated');
+                   //res.redirect('/Student/Home')
+                 }
+                }); 
+                }
+
+                else{
+                  console.log('password doesnt match');
+                  res.redirect('/failed');
+                  return;
+                }
+    });
+
+    })
+    
+  })
+
   router.post('/login',function(req,res,next){
 sess=req.session;
 if(!sess.user){
@@ -485,9 +974,11 @@ if(!sess.user){
       admin.comparePassword(password, user.password, function(err, isMatch){
         if(err) throw err;
         if(isMatch){
-           console.log('login successful');    
+           console.log('login successful');
+          
            sess.user=user._id;
            sess.type='Admin';
+           sess.email=user.emailid;
            sess.active=1;
            res.send('success');
         }
@@ -512,6 +1003,32 @@ if(!sess.user){
 // author: Ankit Sharma
 //function to add new grievance type
 
+router.get('/grievance_type',requireLogin,function(req,res,next){
+  console.log('hiitype'); 
+  console.log(req.session.email)
+    //console.log(req.query.id)
+      Grvtype.grvtype_find(function(err,result)
+  {
+      if(err) throw err;
+     // console.log(result);
+    data={info:result};
+  console.log(data)
+    res.send(data);
+  //)
+      }
+  
+  );
+  });
+router.post('/grvtype_deactivate',function(req,res,next){
+grvtype={grvtype:req.body.grvtype};
+console.log(req.body.grvtype)
+var newvalue={$set:{active:false}};
+Grvtype.update_grvtype(grvtype,newvalue,function(err){
+if(err) throw err;
+console.log('grvtype deleted');
+res.redirect('/');
+})
+});
   router.get('/grvtype_add',requireLogin ,function(req, res, next) {
     var sess=req.session;
     if(sess.user)
@@ -542,7 +1059,7 @@ router.post('/grvtype_add',requireLogin,function(req,res,next){
 /* author : Ankit Sharma
 date: 31/10/2018 */
 
-   router.get('/grievance_type',requireLogin,function(req,res,next){
+   /*router.get('/grievance_type',requireLogin,function(req,res,next){
     console.log('hiitype'); 
  
       //console.log(req.query.id)
@@ -558,5 +1075,44 @@ date: 31/10/2018 */
     );
     });
 
-
+*/
 module.exports = router;
+
+const promiseChaining = (req, res, next) => {
+  let rsp = {};
+  const company = new Company({
+      name: 'FullStackhour'
+  });
+  company.save()
+      .then(savedCompany => {
+          rsp.company = savedCompany;
+          const job = new Job({
+              title: 'Node.js Developer',
+              _company: rsp.company._id
+          });
+          return job.save();
+      })
+      .then(savedJob => {
+          const application = new Application({
+              _job: savedJob._id,
+              _company: rsp.company._id
+          });
+          rsp.job = savedJob;
+          return application.save();
+      })
+      .then(savedApp => {
+          const licence = new Licence({
+              name: 'FREE',
+              _application: savedApp._id
+          });
+          rsp.application = savedApp;
+          return licence.save();
+      })
+      .then(savedLic => {
+          rsp.licence = savedLic;
+          return res.json(rsp);
+      })
+      .catch(err => {
+          return next(err);
+      })
+}

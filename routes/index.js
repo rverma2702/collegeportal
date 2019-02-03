@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require("body-Parser");
 var session = require('express-session');
 var nodemailer = require("nodemailer");
 var app=express();

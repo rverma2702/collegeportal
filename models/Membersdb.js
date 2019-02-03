@@ -33,18 +33,12 @@ var Member = module.exports = mongoose.model('Members',MemberSchema,'Members');
 
 
 module.exports.updateuser = function(id,newvalues, callback){
-    //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
-   //var query={_id:id};
    
    Member.updateOne(id, newvalues,callback);
 }
 
-/*module.exports.getUserById = function(id, callback){
-    Faculty.findById(id, callback);
-}*/
+
 module.exports.update_password = function(id,password, callback){
-    //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
-   //var query={_id:id};
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {
                var query={password:hash};
@@ -67,7 +61,18 @@ Member.grv_find=function(query,callback)
 console.log(query);
     Member.find({$and:[{gseq: { $in: query} },{status:{$in:['pending','viewed']}}]},callback);
 }
-module.exports.createUser = function(newUser, callback){
+Member.Delete_Gcm=function(query,callback){
+    var set={emailid: query}
+    Member.deleteOne(set,callback);
+}
+Member.find_member=function(seq,callback){
+query={Gtype:seq}
+    Member.find(query,callback);
+}
+Member.find_all=function(callback){
+        Member.find(callback);
+    }
+Member.createUser = function(newUser, callback){
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(newUser.password, salt, function(err, hash) {
           newUser.password = hash;

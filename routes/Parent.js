@@ -3,9 +3,9 @@ var router = express.Router();
 var expressValidator=require('express-validator');
 var Parent=require('../models/Parentdb')
 var Grv=require('../models/grievancedb');
-var bodyParser = require("body-Parser");
+var Grvtype=require('../models/grvtypedb');
 var nodemailer = require("nodemailer");
-console.log('sucessful');
+console.log('successful');
 var app = express();
 
 var smtpTransport = nodemailer.createTransport({
@@ -29,7 +29,7 @@ function requireLogin(req, res, next) {
     }
   }
   
-  router.get('/dashboard',requireLogin, function(req, res, next) {
+  router.get('/my-account',requireLogin, function(req, res, next) {
  sess=req.session;
  Parent.getinfobyID(sess.user,function(err, user){
   if(err) throw err;
@@ -105,20 +105,36 @@ Parent.getinfobyID(req.session.user,function(err, user){
     
   })
 
+  router.get('/GRV',requireLogin,function(req,res,next){//For finding a particular Grievance information
+    console.log('hii'); 
+    console.log(req.query.grv_id);
+       Grv.grv_findbyid(req.query.grv_id,function(err,result)
+    {
+    
+        if(err) throw err;
+        console.log(result);
+        console.log(result.Gtype);
+        var wqe={
+        info:result
+    }
+    var data=result
+    res.send(data);
+        }
+    
+  );
+    });
+  
 router.get('/My_Grievances',requireLogin,function(req,res,next){
-  console.log('hii'); 
-  console.log(req.session.email)
-    //console.log(req.query.id)
-      Grv.grv_findbyuser(req.session.email,function(err,result)
+
+    Grv.grv_findbyuser(req.session.email,function(err,result)
   {
       if(err) throw err;
       console.log(result);
-      //res.render('grievances',{
-      var data={
+
+       data={
         info:result
       }
-      //console.log(result1);
-      res.send(data);
+     res.send(data);
 }
   
   );
@@ -384,5 +400,19 @@ console.log('id is '+req.query.id);
   });
   
 
-
+  router.get('/grievance_type',requireLogin,function(req,res,next){
+    console.log('hiitype'); 
+    console.log(req.session.email)
+      //console.log(req.query.id)
+        Grvtype.grvtype_find(function(err,result)
+    {
+        if(err) throw err;
+        console.log(result);
+      
+    res.send(result);
+    //)
+        }
+    
+    );
+    });
 module.exports = router;

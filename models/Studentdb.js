@@ -22,6 +22,9 @@ var StudentSchema = mongoose.Schema({
     status:{
      type:String
     },
+    access:{
+        type:String
+    },
     Batch:{
         type:String
     },
@@ -70,8 +73,8 @@ module.exports.getinfobyID = function(id, callback){
 module.exports.updateuser = function(id,newvalues, callback){
      //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
     //var query={_id:id};
-    
-    Student.updateOne(id, newvalues,callback);
+    var query=id;
+    Student.updateOne(query,newvalues,callback);
  }
  module.exports.update_password = function(id,password, callback){
     //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
@@ -90,7 +93,7 @@ module.exports.updateuser = function(id,newvalues, callback){
   // var query2={status:'verified'};    
    //Student.find({$and:[{status:'verified'},{approval:query}]},callback);
     //Student.find({status:{$ne:'pending'}},callback);
-    Student.find({status:query},callback);
+    Student.find({$and:[{status:'verified'},{access:query}]},callback);
 }
 module.exports.createUser = function(newUser, callback){
     bcrypt.genSalt(10, function(err, salt) {

@@ -1,41 +1,35 @@
 $('#adminlogin').click(function(e) {
 		e.preventDefault();
-		var a = document.lgn1.id.value;
-		var b = document.lgn1.password.value;
+		var a = document.adminlogin.id.value;
+		var b = document.adminlogin.password.value;
 		
 		if (a=="") {
-			document.getElementById("msgerr11").innerHTML="Username Required!";
+			$('#adminid .fa-times').removeClass('hide');
+			$('#adminid .fa-times').attr('title', 'Please Enter Username');
+			$('#adminid').addClass('wrong').removeClass('correct');
 			
 			if (b=="") {
-				document.getElementById("msgerr12").innerHTML="Password Required!";
+				$('#adminpass .fa-times').removeClass('hide');
+				$('#adminpass .fa-times').attr('title', 'Please Enter Password');
+				$('#adminpass').addClass('wrong').removeClass('correct');
 				return false;
 			}else{
-				document.getElementById("msgerr12").innerHTML="";return false;
+				$('#adminpass .fa-times').addClass('hide');
 			}
 
 		}
 
 		if(a!=""){
-			
-			if ((a.indexOf('@')==0) || (!isNaN(a)) || (a.charAt(a.length-1)=='@') || (a.charAt(a.length-4)!='.') || (a.charAt(a.length-3)=='.')){
-				document.getElementById("msgerr11").innerHTML="Invalid Format!";
-				
-				if (b=="") {
-					document.getElementById("msgerr12").innerHTML="Password Required!";
-					return false;
-				}else{
-					document.getElementById("msgerr12").innerHTML="";return false;
-				}
 
-			}
-			else{
-				document.getElementById("msgerr11").innerHTML="";
-				
+					$('#adminid .fa-times').addClass('hide');
+
 				if (b=="") {
-					document.getElementById("msgerr12").innerHTML="Password Required!";
+					$('#adminpass .fa-times').removeClass('hide');
+					$('#adminpass .fa-times').attr('title', 'Please Enter Password');
+					$('#adminpass').addClass('wrong').removeClass('correct');
 					return false;
 				}else{
-					document.getElementById("msgerr12").innerHTML="";
+					$('#adminpass .fa-times').addClass('hide');
 
 					$.ajax({
 				     type: 'post',
@@ -48,69 +42,76 @@ $('#adminlogin').click(function(e) {
 				     error: function(error){
 				          if(error.responseText == 'Unauthorized User'){
 				              console.log(error.responseText);
-				              document.getElementById("msgerr11").innerHTML= error.responseText;
+				              $('#adminid').addClass('wrong').removeClass('correct');
+				              $('#adminid .fa-times').removeClass('hide');
+				              $('#adminid .fa-times').attr('title', 'Unauthorized User');
+				              $('#adminid .fa-check').addClass('hide');
 				              return false;
 				            }
 				            else if (error.responseText == 'pass') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr12").innerHTML= "Invalid Password";
+				              $('#adminpass').addClass('wrong');
+				              $('#adminpass .fa-times').removeClass('hide');
+				              $('#adminpass .fa-times').attr('title', 'Invalid Password');
+				              $('#adminid').removeClass('wrong').addClass('correct');
+				              $('#adminid .fa-check').removeClass('hide');
+				              $('#adminid .fa-times').addClass('hide');
 				            }
 				            else if (error.responseText == 'some') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr12").innerHTML= "Someone Already Logged In!";
+				              $('#adminerror').text('Someone already logged in!');
 				            }
 				            else{
 				            	console.log('Unknown Error');
-				            	document.getElementById("msgerr32").innerHTML= "Unknown Error! Please Try Again.";
+				            	$('#adminerror').text('unknown error! please try again.');
 				            }
 				          },
 				     success: function(data) {
 				       if (data === 'success') { 
 				        console.log(data);
+				        $('#adminid, #adminpass').removeClass('wrong').addClass('correct');
+				        $('#adminid .fa-times, #adminpass .fa-times').addClass('hide');
+				        $('#adminid .fa-check, #adminpass .fa-check').removeClass('hide');
 				        window.location.href = "http://localhost:3000/Admin/Home";
 				        return false;
 				       }
 				     }
 				   });
-
-				}				
+				}
 			}
-		}
-
 	});
 
 
 $('#mngmntlogin').click(function(e) {
 		e.preventDefault();
-		var a = document.lgn2.id.value;
-		var b = document.lgn2.password.value;
+		var a = document.mngmntlogin.id.value;
+		var b = document.mngmntlogin.password.value;
+
 		if (a=="") {
-			document.getElementById("msgerr21").innerHTML="Username Required!";
+			$('#mngmntid .fa-times').removeClass('hide');
+			$('#mngmntid').addClass('wrong').removeClass('correct');
+			
 			if (b=="") {
-				document.getElementById("msgerr22").innerHTML="Password Required!";
+				$('#mngmntpass .fa-times').removeClass('hide');
+				$('#mngmntpass').addClass('wrong').removeClass('correct');
 				return false;
 			}else{
-				document.getElementById("msgerr22").innerHTML="";return false;
+				$('#mngmntpass .fa-times').addClass('hide');
 			}
 
 		}
+
 		if(a!=""){
-			if ((a.indexOf('@')==0) || (!isNaN(a)) || (a.charAt(a.length-1)=='@') || (a.charAt(a.length-4)!='.') || (a.charAt(a.length-3)=='.')){
-				document.getElementById("msgerr21").innerHTML="Invalid Format!";
+
+					$('#mngmntid .fa-times').addClass('hide');
+
 				if (b=="") {
-					document.getElementById("msgerr22").innerHTML="Password Required!";
+					$('#mngmntpass .fa-times').removeClass('hide');
+					$('#mngmntpass').addClass('wrong').removeClass('correct');
 					return false;
 				}else{
-					document.getElementById("msgerr22").innerHTML="";return false;
-				}
-			}
-			else{
-				document.getElementById("msgerr21").innerHTML="";
-				if (b=="") {
-					document.getElementById("msgerr22").innerHTML="Password Required!";
-					return false;
-				}else{
-					document.getElementById("msgerr22").innerHTML="";
+					$('#mngmntpass .fa-times').addClass('hide');
+
 
 					$.ajax({
 				     type: 'post',
@@ -123,25 +124,34 @@ $('#mngmntlogin').click(function(e) {
 				     error: function(error){
 				          if(error.responseText == 'Unauthorized User'){
 				              console.log(error.responseText);
-				              document.getElementById("msgerr21").innerHTML= error.responseText;
+				              $('#mngmntid').addClass('wrong').removeClass('correct');
+				              $('#mngmntid .fa-times').removeClass('hide');
+				              $('#mngmntid .fa-check').addClass('hide');
 				              return false;
 				            }
 				            else if (error.responseText == 'pass') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr22").innerHTML= "Invalid Password";
+				              $('#mngmntpass').addClass('wrong');
+				              $('#mngmntpass .fa-times').removeClass('hide');
+				              $('#mngmntid').removeClass('wrong').addClass('correct');
+				              $('#mngmntid .fa-check').removeClass('hide');
+				              $('#mngmntid .fa-times').addClass('hide');
 				            }
 				            else if (error.responseText == 'some') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr22").innerHTML= "Someone Already Logged In!";
+				              $('#mngmnterror').text('Someone already logged in!');
 				            }
 				            else{
 				            	console.log('Unknown Error');
-				            	document.getElementById("msgerr32").innerHTML= "Unknown Error! Please Try Again.";
+				            	$('#mngmnterror').text('unknown error! please try again.');
 				            }
 				          },
 				     success: function(data) {
 				       if (data === 'success') { 
 				        console.log(data);
+				        $('#mngmntid, #mngmntpass').removeClass('wrong').addClass('correct');
+				        $('#mngmntid .fa-times, #mngmntpass .fa-times').addClass('hide');
+				        $('#mngmntid .fa-check, #mngmntpass .fa-check').removeClass('hide');
 				        window.location.href = "http://localhost:3000/mngmnt/Home";
 				        return false;
 				       }
@@ -149,43 +159,40 @@ $('#mngmntlogin').click(function(e) {
 				   });
 				}
 			}
-		}
-
 	});
 
 
 
 $('#facultylogin').click(function(e) {
 		e.preventDefault();
-		var a = document.lgn3.id.value;
-		var b = document.lgn3.password.value;
+		var a = document.facultylogin.id.value;
+		var b = document.facultylogin.password.value;
+
 		if (a=="") {
-			document.getElementById("msgerr31").innerHTML="Username Required!";
+			$('#facultyid .fa-times').removeClass('hide');
+			$('#facultyid').addClass('wrong').removeClass('correct');
+			
 			if (b=="") {
-				document.getElementById("msgerr32").innerHTML="Password Required!";
+				$('#facultypass .fa-times').removeClass('hide');
+				$('#facultypass').addClass('wrong').removeClass('correct');
 				return false;
 			}else{
-				document.getElementById("msgerr32").innerHTML="";return false;
+				$('#facultypass .fa-times').addClass('hide');
 			}
 
 		}
+
 		if(a!=""){
-			if ((a.indexOf('@')==0) || (!isNaN(a)) || (a.charAt(a.length-1)=='@') || (a.charAt(a.length-4)!='.') || (a.charAt(a.length-3)=='.')){
-				document.getElementById("msgerr31").innerHTML="Invalid Format!";
+
+					$('#facultyid .fa-times').addClass('hide');
+
 				if (b=="") {
-					document.getElementById("msgerr32").innerHTML="Password Required!";
+					$('#facultypass .fa-times').removeClass('hide');
+					$('#facultypass').addClass('wrong').removeClass('correct');
 					return false;
 				}else{
-					document.getElementById("msgerr32").innerHTML="";return false;
-				}
-			}
-			else{
-				document.getElementById("msgerr31").innerHTML="";
-				if (b=="") {
-					document.getElementById("msgerr32").innerHTML="Password Required!";
-					return false;
-				}else{
-					document.getElementById("msgerr32").innerHTML="";
+					$('#facultypass .fa-times').addClass('hide');
+
 
 					$.ajax({
 				     type: 'post',
@@ -198,29 +205,38 @@ $('#facultylogin').click(function(e) {
 				     error: function(error){
 				          if(error.responseText == 'Unauthorized User'){
 				              console.log(error.responseText);
-				              document.getElementById("msgerr31").innerHTML= error.responseText;
+				              $('#facultyid').addClass('wrong').removeClass('correct');
+				              $('#facultyid .fa-times').removeClass('hide');
+				              $('#facultyid .fa-check').addClass('hide');
 				              return false;
 				            }
 				            else if (error.responseText == 'pass') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr32").innerHTML= "Invalid Password";
+				              $('#facultypass').addClass('wrong');
+				              $('#facultypass .fa-times').removeClass('hide');
+				              $('#facultyid').removeClass('wrong').addClass('correct');
+				              $('#facultyid .fa-check').removeClass('hide');
+				              $('#facultyid .fa-times').addClass('hide');
 				            }
 				            else if (error.responseText == 'some') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr32").innerHTML= "Someone Already Logged In!";
+				              $('#facultyerror').text('Someone already logged in!');
 				            }
 				            else if (error.responseText == 'not apprv') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr32").innerHTML= "User Is Not Approved By The Admin Yet!";
+				              $('#facultyerror').text('Waiting for approval!');
 				            }
 				            else{
 				            	console.log('Unknown Error');
-				            	document.getElementById("msgerr32").innerHTML= "Unknown Error! Please Try Again.";
+				            	$('#facultyerror').text('unknown error! please try again.');
 				            }
 				          },
 				     success: function(data) {
 				       if (data === 'success') { 
 				        console.log(data);
+				        $('#facultyid, #facultypass').removeClass('wrong').addClass('correct');
+				        $('#facultyid .fa-times, #facultypass .fa-times').addClass('hide');
+				        $('#facultyid .fa-check, #facultypass .fa-check').removeClass('hide');
 				        window.location.href = "http://localhost:3000/faculty/Home";
 				        return false;
 				       }
@@ -228,43 +244,40 @@ $('#facultylogin').click(function(e) {
 				   });
 				}
 			}
-		}
-
 	});
 
 
 
-$('#memberlogin').click(function(e) {
+$('#gcmlogin').click(function(e) {
 		e.preventDefault();
-		var a = document.lgn4.id.value;
-		var b = document.lgn4.password.value;
+		var a = document.gcmlogin.id.value;
+		var b = document.gcmlogin.password.value;
+
 		if (a=="") {
-			document.getElementById("msgerr41").innerHTML="Username Required!";
+			$('#gcmid .fa-times').removeClass('hide');
+			$('#gcmid').addClass('wrong').removeClass('correct');
+			
 			if (b=="") {
-				document.getElementById("msgerr42").innerHTML="Password Required!";
+				$('#gcmpass .fa-times').removeClass('hide');
+				$('#gcmpass').addClass('wrong').removeClass('correct');
 				return false;
 			}else{
-				document.getElementById("msgerr42").innerHTML="";return false;
+				$('#gcmpass .fa-times').addClass('hide');
 			}
 
 		}
+
 		if(a!=""){
-			if ((a.indexOf('@')==0) || (!isNaN(a)) || (a.charAt(a.length-1)=='@') || (a.charAt(a.length-4)!='.') || (a.charAt(a.length-3)=='.')){
-				document.getElementById("msgerr41").innerHTML="Invalid Format!";
+
+					$('#gcmid .fa-times').addClass('hide');
+
 				if (b=="") {
-					document.getElementById("msgerr42").innerHTML="Password Required!";
+					$('#gcmpass .fa-times').removeClass('hide');
+					$('#gcmpass').addClass('wrong').removeClass('correct');
 					return false;
 				}else{
-					document.getElementById("msgerr42").innerHTML="";return false;
-				}
-			}
-			else{
-				document.getElementById("msgerr41").innerHTML="";
-				if (b=="") {
-					document.getElementById("msgerr42").innerHTML="Password Required!";
-					return false;
-				}else{
-					document.getElementById("msgerr42").innerHTML="";
+					$('#gcmpass .fa-times').addClass('hide');
+
 
 					$.ajax({
 				     type: 'post',
@@ -277,69 +290,74 @@ $('#memberlogin').click(function(e) {
 				     error: function(error){
 				          if(error.responseText == 'Unauthorized User'){
 				              console.log(error.responseText);
-				              document.getElementById("msgerr41").innerHTML= error.responseText;
+				              $('#gcmid').addClass('wrong').removeClass('correct');
+				              $('#gcmid .fa-times').removeClass('hide');
+				              $('#gcmid .fa-check').addClass('hide');
 				              return false;
 				            }
 				            else if (error.responseText == 'pass') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr42").innerHTML= "Invalid Password";
+				              $('#gcmpass').addClass('wrong');
+				              $('#gcmpass .fa-times').removeClass('hide');
+				              $('#gcmid').removeClass('wrong').addClass('correct');
+				              $('#gcmid .fa-check').removeClass('hide');
+				              $('#gcmid .fa-times').addClass('hide');
 				            }
 				            else if (error.responseText == 'some') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr42").innerHTML= "Someone Already Logged In!";
+				              $('#gcmerror').text('Someone already logged in!');
 				            }
 				            else{
 				            	console.log('Unknown Error');
-				            	document.getElementById("msgerr42").innerHTML= "Unknown Error! Please Try Again.";
+				            	$('#gcmerror').text('unknown error! please try again.');
 				            }
 				          },
 				     success: function(data) {
 				       if (data === 'success') { 
 				        console.log(data);
+				        $('#gcmid, #gcmpass').removeClass('wrong').addClass('correct');
+				        $('#gcmid .fa-times, #gcmpass .fa-times').addClass('hide');
+				        $('#gcmid .fa-check, #gcmpass .fa-check').removeClass('hide');
 				        window.location.href = "http://localhost:3000/Members/Home";
 				        return false;
 				       }
 				     }
 				   });
-
 				}
 			}
-		}
-
 	});
 
 
 $('#studentlogin').click(function(e) {
 		e.preventDefault();
-		var a = document.lgn5.id.value;
-		var b = document.lgn5.password.value;
+		var a = document.studentlogin.id.value;
+		var b = document.studentlogin.password.value;
+
 		if (a=="") {
-			document.getElementById("msgerr51").innerHTML="Username Required!";
+			$('#studentid .fa-times').removeClass('hide');
+			$('#studentid').addClass('wrong').removeClass('correct');
+			
 			if (b=="") {
-				document.getElementById("msgerr52").innerHTML="Password Required!";
+				$('#studentpass .fa-times').removeClass('hide');
+				$('#studentpass').addClass('wrong').removeClass('correct');
 				return false;
 			}else{
-				document.getElementById("msgerr52").innerHTML="";return false;
+				$('#studentpass .fa-times').addClass('hide');
 			}
 
 		}
+
 		if(a!=""){
-			if ((a.indexOf('@')==0) || (!isNaN(a)) || (a.charAt(a.length-1)=='@') || (a.charAt(a.length-4)!='.') || (a.charAt(a.length-3)=='.')){
-				document.getElementById("msgerr51").innerHTML="Invalid Format!";
+
+					$('#studentid .fa-times').addClass('hide');
+
 				if (b=="") {
-					document.getElementById("msgerr52").innerHTML="Password Required!";
+					$('#studentpass .fa-times').removeClass('hide');
+					$('#studentpass').addClass('wrong').removeClass('correct');
 					return false;
 				}else{
-					document.getElementById("msgerr52").innerHTML="";return false;
-				}
-			}
-			else{
-				document.getElementById("msgerr51").innerHTML="";
-				if (b=="") {
-					document.getElementById("msgerr52").innerHTML="Password Required!";
-					return false;
-				}else{
-					document.getElementById("msgerr52").innerHTML="";
+					$('#studentpass .fa-times').addClass('hide');
+
 
 					$.ajax({
 				     type: 'post',
@@ -352,74 +370,75 @@ $('#studentlogin').click(function(e) {
 				     error: function(error){
 				          if(error.responseText == 'Unauthorized User'){
 				              console.log(error.responseText);
-				              document.getElementById("msgerr51").innerHTML= error.responseText;
+				              $('#studentid').addClass('wrong').removeClass('correct');
+				              $('#studentid .fa-times').removeClass('hide');
+				              $('#studentid .fa-check').addClass('hide');
 				              return false;
 				            }
 				            else if (error.responseText == 'pass') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr52").innerHTML= "Invalid Password";
+				              $('#studentpass').addClass('wrong');
+				              $('#studentpass .fa-times').removeClass('hide');
+				              $('#studentid').removeClass('wrong').addClass('correct');
+				              $('#studentid .fa-check').removeClass('hide');
+				              $('#studentid .fa-times').addClass('hide');
 				            }
 				            else if (error.responseText == 'some') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr52").innerHTML= "Someone Already Logged In!";
-				            }
-				            else if (error.responseText == 'not apprv') {
-				              console.log(error.responseText);
-				              document.getElementById("msgerr52").innerHTML= "User Is Not Approved By The Admin Yet!";
+				              $('#studenterror').text('Someone already logged in!');
 				            }
 				            else{
 				            	console.log('Unknown Error');
-				            	document.getElementById("msgerr52").innerHTML= "Unknown Error! Please Try Again.";
+				            	$('#studenterror').text('unknown error! please try again.');
 				            }
 				          },
 				     success: function(data) {
 				       if (data === 'success') { 
 				        console.log(data);
+				        $('#studentid, #studentpass').removeClass('wrong').addClass('correct');
+				        $('#studentid .fa-times, #studentpass .fa-times').addClass('hide');
+				        $('#studentid .fa-check, #studentpass .fa-check').removeClass('hide');
 				        window.location.href = "http://localhost:3000/Student/Home";
 				        return false;
 				       }
 				     }
 				   });
-
 				}
 			}
-		}
-
 	});
 
 
 
 $('#parentlogin').click(function(e) {
 		e.preventDefault();
-		var a = document.lgn6.id.value;
-		var b = document.lgn6.password.value;
+		var a = document.parentlogin.id.value;
+		var b = document.parentlogin.password.value;
+
 		if (a=="") {
-			document.getElementById("msgerr61").innerHTML="Username Required!";
+			$('#parentid .fa-times').removeClass('hide');
+			$('#parentid').addClass('wrong').removeClass('correct');
+			
 			if (b=="") {
-				document.getElementById("msgerr62").innerHTML="Password Required!";
+				$('#parentpass .fa-times').removeClass('hide');
+				$('#parentpass').addClass('wrong').removeClass('correct');
 				return false;
 			}else{
-				document.getElementById("msgerr62").innerHTML="";return false;
+				$('#parentpass .fa-times').addClass('hide');
 			}
 
 		}
+
 		if(a!=""){
-			if ((a.indexOf('@')==0) || (!isNaN(a)) || (a.charAt(a.length-1)=='@') || (a.charAt(a.length-4)!='.') || (a.charAt(a.length-3)=='.')){
-				document.getElementById("msgerr61").innerHTML="Invalid Format!";
+
+					$('#parentid .fa-times').addClass('hide');
+
 				if (b=="") {
-					document.getElementById("msgerr62").innerHTML="Password Required!";
+					$('#parentpass .fa-times').removeClass('hide');
+					$('#parentpass').addClass('wrong').removeClass('correct');
 					return false;
 				}else{
-					document.getElementById("msgerr62").innerHTML="";return false;
-				}
-			}
-			else{
-				document.getElementById("msgerr61").innerHTML="";
-				if (b=="") {
-					document.getElementById("msgerr62").innerHTML="Password Required!";
-					return false;
-				}else{
-					document.getElementById("msgerr62").innerHTML="";
+					$('#parentpass .fa-times').addClass('hide');
+
 
 					$.ajax({
 				     type: 'post',
@@ -432,74 +451,75 @@ $('#parentlogin').click(function(e) {
 				     error: function(error){
 				          if(error.responseText == 'Unauthorized User'){
 				              console.log(error.responseText);
-				              document.getElementById("msgerr61").innerHTML= error.responseText;
+				              $('#parentid').addClass('wrong').removeClass('correct');
+				              $('#parentid .fa-times').removeClass('hide');
+				              $('#parentid .fa-check').addClass('hide');
 				              return false;
 				            }
 				            else if (error.responseText == 'pass') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr62").innerHTML= "Invalid Password";
+				              $('#parentpass').addClass('wrong');
+				              $('#parentpass .fa-times').removeClass('hide');
+				              $('#parentid').removeClass('wrong').addClass('correct');
+				              $('#parentid .fa-check').removeClass('hide');
+				              $('#parentid .fa-times').addClass('hide');
 				            }
 				            else if (error.responseText == 'some') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr62").innerHTML= "Someone Already Logged In!";
-				            }
-				            else if (error.responseText == 'not apprv') {
-				              console.log(error.responseText);
-				              document.getElementById("msgerr62").innerHTML= "User Is Not Approved By The Admin Yet!";
+				              $('#parenterror').text('Someone already logged in!');
 				            }
 				            else{
 				            	console.log('Unknown Error');
-				            	document.getElementById("msgerr62").innerHTML= "Unknown Error! Please Try Again.";
+				            	$('#parenterror').text('unknown error! please try again.');
 				            }
 				          },
 				     success: function(data) {
 				       if (data === 'success') { 
 				        console.log(data);
+				        $('#parentid, #parentpass').removeClass('wrong').addClass('correct');
+				        $('#parentid .fa-times, #parentpass .fa-times').addClass('hide');
+				        $('#parentid .fa-check, #parentpass .fa-check').removeClass('hide');
 				        window.location.href = "http://localhost:3000/Parent/Home";
 				        return false;
 				       }
 				     }
 				   });
-
 				}
 			}
-		}
-
 	});
 
 
 
 $('#nonteachinglogin').click(function(e) {
 		e.preventDefault();
-		var a = document.lgn7.id.value;
-		var b = document.lgn7.password.value;
+		var a = document.nonteachinglogin.id.value;
+		var b = document.nonteachinglogin.password.value;
+
 		if (a=="") {
-			document.getElementById("msgerr71").innerHTML="Username Required!";
+			$('#nonteachingid .fa-times').removeClass('hide');
+			$('#nonteachingid').addClass('wrong').removeClass('correct');
+			
 			if (b=="") {
-				document.getElementById("msgerr72").innerHTML="Password Required!";
+				$('#nonteachingpass .fa-times').removeClass('hide');
+				$('#nonteachingpass').addClass('wrong').removeClass('correct');
 				return false;
 			}else{
-				document.getElementById("msgerr72").innerHTML="";return false;
+				$('#nonteachingpass .fa-times').addClass('hide');
 			}
 
 		}
+
 		if(a!=""){
-			if ((a.indexOf('@')==0) || (!isNaN(a)) || (a.charAt(a.length-1)=='@') || (a.charAt(a.length-4)!='.') || (a.charAt(a.length-3)=='.')){
-				document.getElementById("msgerr71").innerHTML="Invalid Format!";
+
+					$('#nonteachingid .fa-times').addClass('hide');
+
 				if (b=="") {
-					document.getElementById("msgerr72").innerHTML="Password Required!";
+					$('#nonteachingpass .fa-times').removeClass('hide');
+					$('#nonteachingpass').addClass('wrong').removeClass('correct');
 					return false;
 				}else{
-					document.getElementById("msgerr72").innerHTML="";return false;
-				}
-			}
-			else{
-				document.getElementById("msgerr71").innerHTML="";
-				if (b=="") {
-					document.getElementById("msgerr72").innerHTML="Password Required!";
-					return false;
-				}else{
-					document.getElementById("msgerr72").innerHTML="";
+					$('#nonteachingpass .fa-times').addClass('hide');
+
 
 					$.ajax({
 				     type: 'post',
@@ -512,202 +532,63 @@ $('#nonteachinglogin').click(function(e) {
 				     error: function(error){
 				          if(error.responseText == 'Unauthorized User'){
 				              console.log(error.responseText);
-				              document.getElementById("msgerr71").innerHTML= error.responseText;
+				              $('#nonteachingid').addClass('wrong').removeClass('correct');
+				              $('#nonteachingid .fa-times').removeClass('hide');
+				              $('#nonteachingid .fa-check').addClass('hide');
 				              return false;
 				            }
 				            else if (error.responseText == 'pass') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr72").innerHTML= "Invalid Password";
+				              $('#nonteachingpass').addClass('wrong');
+				              $('#nonteachingpass .fa-times').removeClass('hide');
+				              $('#nonteachingid').removeClass('wrong').addClass('correct');
+				              $('#nonteachingid .fa-check').removeClass('hide');
+				              $('#nonteachingid .fa-times').addClass('hide');
 				            }
 				            else if (error.responseText == 'some') {
 				              console.log(error.responseText);
-				              document.getElementById("msgerr72").innerHTML= "Someone Already Logged In!";
-				            }
-				            else if (error.responseText == 'not apprv') {
-				              console.log(error.responseText);
-				              document.getElementById("msgerr72").innerHTML= "User Is Not Approved By The Admin Yet!";
+				              $('#nonteachingerror').text('Someone already logged in!');
 				            }
 				            else{
 				            	console.log('Unknown Error');
-				            	document.getElementById("msgerr72").innerHTML= "Unknown Error! Please Try Again.";
+				            	$('#nonteachingerror').text('unknown error! please try again.');
 				            }
 				          },
 				     success: function(data) {
 				       if (data === 'success') { 
 				        console.log(data);
+				        $('#nonteachingid, #nonteachingpass').removeClass('wrong').addClass('correct');
+				        $('#nonteachingid .fa-times, #nonteachingpass .fa-times').addClass('hide');
+				        $('#nonteachingid .fa-check, #nonteachingpass .fa-check').removeClass('hide');
 				        window.location.href = "http://localhost:3000/staff/Home";
 				        return false;
 				       }
 				     }
 				   });
-
 				}
 			}
-		}
-
 	});
 
 
 
-	var a=100;
-
-	$('#password').keyup(function(){
-			
-			var pwd=$('#password').val();
-			var pwdscore=0;
-
-			if (/[a-z]/.test(pwd)) { pwdscore += 25; }
-			if (/[A-Z]/.test(pwd)) { pwdscore += 25 ;}
-			if (/[\d]/.test(pwd)) { pwdscore += 25 ;}
-			if (pwd.length>=8) { pwdscore += 25 ;}
-			
-			if (pwdscore>0 && pwdscore<=50) {
-				$('.strength').text('weak');$('.strength').addClass('red');;$('.strength').removeClass('orange');$('.strength').removeClass('green');
-				}
-			if (pwdscore>50 && pwdscore<=75) {
-				$('.strength').text('good');$('.strength').removeClass('red');;$('.strength').addClass('orange');$('.strength').removeClass('green');
-				}
-			if (pwdscore>75 && pwdscore<=100) {
-				$('.strength').text('strong');$('.strength').removeClass('red');;$('.strength').removeClass('orange');$('.strength').addClass('green');
-				}
-			
-		});
-
 //student registration validation...
 
-function stdregval(){
-			//e.preventDefault();
+$('#studentsignup').click(function(e){
+			e.preventDefault();
+			console.log('hello');
+			alert("hellofjsdfhaklsjdhf");
 
-			var name = document.stdreg.name.value;
-			var email = document.stdreg.email.value;
-			var cdate = document.stdreg.cdate.value;
-			var id = document.stdreg.id.value;
-			var mobile = document.stdreg.Mobile.value;
-			var pwd = document.stdreg.password.value;
-			var pwd2 = document.stdreg.password2.value;
-			var dep = document.stdreg.dep.value;
-			var batch = document.stdreg.batch.value;
-			var gender = document.stdreg.gender.value;
+			/*var name = document.studentsignup.name.value;
+			var email = document.studentsignup.email.value;
+			var cdate = document.studentsignup.cdate.value;
+			var id = document.studentsignup.id.value;
+			var mobile = document.studentsignup.Mobile.value;
+			var pwd = document.studentsignup.password.value;
+			var pwd2 = document.studentsignup.password2.value;
+			var dep = document.studentsignup.dep.value;
+			var batch = document.studentsignup.batch.value;
+			var gender = document.studentsignup.gender.value;
+*/
 
-			if ((name=="") || (email=="") || (cdate=="") || (id=="")  || (mobile=="") || (pwd=="") || (pwd!=pwd2) || (a<=75) || (!isNaN(mobile))) {
-					
-					if(name==""){
-					
-						$('#snameerr').text('Username Required!');
-					} 
-					else{
-							if (!isNaN(email)) {
-								$('#snameerr').text('Username Must Contain Alphabets!');
-							} 
-							else{
-								$('#nameerr').text('');
-							}
-						}
-				
-					if(email==""){
-						$('#semailerr').text('Email ID Required!');
-					}
-					else{
-						if ((email.indexOf('@')==0) || (!isNaN(email)) || (email.charAt(email.length-1)=='@') || (email.charAt(email.length-4)!='.') || (email.charAt(email.length-3)=='.')) {
-							$('#emailerr').text('Invalid Format!');
-						}else{
-							$('#emailerr').text('');
-						}
-					}
-					
-					if(cdate==""){
-						$('#scdateerr').text('Course Completion Date Required!');
-					}
-					else{
-						$('#scdateerr').text('');
-					}
-					if(id==""){
-						$('#siderr').text('College ID Required!');
-					}
-					else{
-						$('#siderr').text('');
-					}
-					if(mobile==""){
-						$('#smoberr').text('Mobile Number Required!');
-					}else{
-						if (isNaN(mobile)) {
-							$('#smoberr').text('Invalid Mobile Number!');
-						}
-						else{
-							$('#moberr').text('');
-						}
-					}
-					if(pwd==""){
-						$('#spwderr').text('Password Required!');
-					}
-					else{
-						if(a<=75){
-							$('#spwderr').text('Password Not Strong!');
-						}
-						else{
-							$('#spwderr').text('');
-						}
-					}
-					if(pwd!=pwd2){
-						$('#spwd2err').text('Passwords Don\'t Match!');
-					}
-					else{
-						$('#spwd2err').text('');
-					}
-					
-					return false;
-				
-			}
-			/*else{
-
-				$.ajax({
-				     type: 'post',
-				     datatype: "json",
-				     data: {
-				      
-				      name: name,
-				      email: email,
-				      dep: dep,
-				      gender: gender,
-				      batch: batch,
-				      id: id,
-				      cdate: cdate,
-				      Mobile: mobile,
-				      password: pwd,
-				      password2: pwd2,
-
-				     },
-				     url: 'http://localhost:3000/Student/register', //node.js server is running
-
-				     error: function(error){
-				     	alert('error');
-				          if(error.responseText == 'already reg not verified'){
-				              console.log(error.responseText);
-				              document.getElementById("stderr").innerHTML= "Already Registered With Pending Verification";
-				              return false;
-				            }
-				            else if (error.responseText == 'already reg verified') {
-				              console.log(error.responseText);
-				              document.getElementById("stderr").innerHTML= "Already Registered! Please Login.";
-				            }
-				            else if (error.responseText == 'some') {
-				              console.log(error.responseText);
-				              document.getElementById("stderr").innerHTML= "Someone Already Logged In!";
-				            }
-				            else{
-				            	console.log('Unknown Error');
-				            	document.getElementById("stderr").innerHTML= "Unknown Error! Please Try Again.";
-				            }
-				          },
-				     success: function(data) {
-				     	alert('suck');
-				       if (data === 'success') { 
-				        console.log(data);
-				        document.getElementById("stderr").innerHTML= "Successfully Registered!";
-				        return false;
-				       }
-				     }
-				   });
-
-			}*/
-		}
+			return false;
+		});

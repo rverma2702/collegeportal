@@ -21,6 +21,7 @@
     "ejs": "^2.6.1",
     "express": "~4.16.0",
     "express-flash": "0.0.2",
+    "express-flash-notification": "^0.5.0",
     "express-messages": "*",
     "express-session": "^1.15.6",
     "express-session-expire-timeout": "^1.0.3",
@@ -38,6 +39,7 @@
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
+    "pdfmake": "^0.1.40",
     "smtp-server": "^3.4.7",
     "uniqid": "^5.0.3"
   }

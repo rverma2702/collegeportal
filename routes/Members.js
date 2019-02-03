@@ -3,9 +3,9 @@ var router = express.Router();
 var expressValidator=require('express-validator');
 var Member=require('../models/Membersdb');
 var Grv=require('../models/grievancedb');
+const flash = require('express-flash-notification');
 var session=require('express-session');
-var bodyParser = require("body-Parser");
-console.log('sucessful');
+console.log('successful');
 var app = express();
 var nodemailer = require("nodemailer");
 var sess;
@@ -35,7 +35,7 @@ function requireLogin(req, res, next) {
     console.log('hiii');
     console.log(req.session.grv_type)
 
-    Grv.grv_findformembers(req.session.grv_type,function(err,result)
+    Grv.grv_findformembers_and_mngmnt(req.session.grv_type,function(err,result)
     {
         if(err) throw err;
         console.log(result);
@@ -50,6 +50,24 @@ function requireLogin(req, res, next) {
 
     );
     });
+
+    router.get('/GRV',requireLogin,function(req,res,next){//For finding a particular Grievance information
+      //console.log('hii'); 
+      //console.log(req.query.grv_id);
+         Grv.grv_findbyid(req.query.grv_id,function(err,result)
+      {
+          if(err) throw err;
+          console.log(result);
+          console.log(result.Gtype);
+          var wqe={
+          info:result
+      }
+      var data=result
+      res.send(data);
+          }
+      
+    );
+      });
 
   router.get('/Home',requireLogin, function(req, res, next) {
     res.render('gcm_dash',{title:'Members',Gtype:sess.grv_type});
@@ -97,10 +115,13 @@ function requireLogin(req, res, next) {
     });
   });
 
+
+
   router.post('/password_reset',function(req,res,next){
     var cpass=req.body.current_password;
     var  npass=req.body.new_password;
     var npass2=req.body.new_password1;
+    console.log(cpass);
   
   Member.getUserByID(req.session.user,function(err, user){
     if(err) throw err;
@@ -116,7 +137,7 @@ function requireLogin(req, res, next) {
   
                     var id={ _id:sess.user };
                     //console.log('id is '+sess.user.id);
-                    
+                    if(npass==npass2){
                   Member.update_password(id,npass,function(err){
                      if(err) throw err;
                    else
@@ -124,12 +145,16 @@ function requireLogin(req, res, next) {
                      console.log(' password updates');
                      res.redirect('/success')
                    }
-                  }); 
+                  });
+                }
+                else{
+                  console.log("new password does'nt match");
+                } 
                   }
   
                   else{
                     console.log('password doesnt match');
-                    res.redirect('/failed');
+                    //res.redirect('/failed');
                     return;
                   }
       });
@@ -178,6 +203,8 @@ function requireLogin(req, res, next) {
            sess.user=user._id;
            sess.grv_type=user.Gtype;
           sess.type='Members';
+          sess.name=user.name;
+          sess.email=user.emailid;
           sess.active=1;
          
            //res.redirect('/Members/Grievances');

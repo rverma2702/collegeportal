@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 var expressValidator=require('express-validator');
 var faculty=require('../models/facultydb')
-var bodyParser = require("body-Parser");
 var Grv=require('../models/grievancedb');
 var session=require('express-session');
+var Grvtype=require('../models/grvtypedb');
 var nodemailer = require("nodemailer");
-console.log('sucessful');
+console.log('successful');
 var app = express();
 var sess;
 var smtpTransport = nodemailer.createTransport({
@@ -29,7 +29,7 @@ function requireLogin(req, res, next) {
     }
   }
 
-router.get('/dashboard',requireLogin, function(req, res, next) {
+router.get('/my-account',requireLogin, function(req, res, next) {
   sess=req.session;
   faculty.getinfobyID(sess.user,function(err, user){
    if(err) throw err;
@@ -38,18 +38,39 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
        res.redirect('/unknw');
        return;
    }
-   res.render('s2',{
+   
+   var data={
      title:"Faculty",
     name: user.name,
     gender:user.gender,
     id:user.id,
     Desig:user.Desig,
     dep:user.dep,
-    mobile:user.mobileno
-     });
+    mobile:user.mobileno,
+    emailid:user.emailid
+   }
+   res.send(data);
   });  
  });
- router.get('/My_Grievances',requireLogin,function(req,res,next){
+ router.get('/GRV',requireLogin,function(req,res,next){//For finding a particular Grievance information
+  console.log('hii'); 
+  console.log(req.query.grv_id);
+     Grv.grv_findbyid(req.query.grv_id,function(err,result)
+  {
+      if(err) throw err;
+      console.log(result);
+      console.log(result.Gtype);
+      var wqe={
+      info:result
+  }
+  var data=result
+  res.send(data);
+      }
+  
+);
+  });
+
+ router.get('/My_Grievances',requireLogin,function(req,res,next){//project all the grievances 
   console.log('hii'); 
   console.log(req.session.email)
     //console.log(req.query.id)
@@ -57,13 +78,33 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
   {
       if(err) throw err;
       console.log(result);
-      res.render('grievances',{
-      result:result
-  })
-      }
+     var data={
+      info:result
+  }
+res.send(data);      
+}
   
   );
   });
+  router.get('/GRV',requireLogin,function(req,res,next){//detail of indiviual grievance
+    console.log('hii'); 
+    console.log(req.query.grv_id);
+       Grv.grv_findbyid(req.query.grv_id,function(err,result)
+    {
+        if(err) throw err;
+        console.log(result);
+        console.log(result.Gtype);
+        var wqe={
+        info:result
+    }
+    var data=result
+    res.send(data);
+        }
+    
+  );
+    });
+
+
  router.get('/Home',requireLogin, function(req, res, next) {
   res.render('Faculty_dash',{title:'faculty',verify:sess.ver});
 });
@@ -88,6 +129,45 @@ router.get('/complaint',requireLogin, function(req, res, next) {
   router.get('/al', function(req, res, next) {
     res.render('al',{title:'Faculty_Login'});
   });
+
+  router.post('/password_reset',function(req,res,next){
+    var cpass=req.body.current_password;
+    var  npass=req.body.new_password;
+    var npass2=req.body.new_password1;
+  
+  faculty.getinfobyID(req.session.user,function(err, user){
+    if(err) throw err;
+    if(!user){
+        console.log("unknown user");
+        res.redirect('/faculty/unknw');
+        return;
+    }
+  
+          faculty.comparePassword(cpass, user.password, function(err, isMatch){
+              if(err) throw err;
+                if(isMatch){
+  
+                    var id={ _id:sess.user };
+                    
+                  faculty.update_password(id,npass,function(err){
+                     if(err) throw err;
+                   else
+                   {
+                     console.log(' password updated');
+                     res.send('Password Updated');
+                   }
+                  }); 
+                  }
+  
+                  else{
+                    console.log('password doesnt match');
+                    res.redirect('/failed');
+                    return;
+                  }
+      });
+      })
+    });
+
   router.post('/login',function(req,res,next){
     sess=req.session;
     if(!sess.user)
@@ -111,17 +191,11 @@ router.get('/complaint',requireLogin, function(req, res, next) {
         if(err) throw err;
         if(isMatch){
            console.log('login sucsseful');      
-           if(user.status=='verified')
-           {sess.ver=1;
-           }
-           else
-           {
-             sess.ver=0;
-             sess.email=user.emailid;
-          }
+         
           sess.user=user._id;
           sess.type="faculty";
           sess.active=1;
+         sess.email=user.emailid;
           //res.redirect('/faculty/Home');
           res.send('success');
     
@@ -149,12 +223,7 @@ router.get('/complaint',requireLogin, function(req, res, next) {
       var newvalues = {$set: 
         {
           
-          name:req.body.name,
-          dep:req.body.dep,
-          Desig:req.body.Desig,
-          //gender:req.body.gender,
-          id:req.body.id,
-          //mobileno:req.body.Mobile
+          mobileno:req.body.mobileno
       } 
     
     };
@@ -164,7 +233,7 @@ router.get('/complaint',requireLogin, function(req, res, next) {
      else
      {
        console.log(' successfuly update ');
-       res.redirect('/faculty/dashboard')
+       res.redirect('/faculty/Home#!/')
      }
     });
   
@@ -264,42 +333,6 @@ router.get('/complaint',requireLogin, function(req, res, next) {
     }
 });
 
-/*
-router.get('/send', function(req, res, next) {
-  rand=Math.floor((Math.random() * 100) + 54);
-  var id={ _id:sess.user };
-  //console.log('id is '+sess.user.id);
-  var newvalues = {$set: 
-    { rand:rand
-    }};
-  
-faculty.updateuser(id,newvalues,function(err){
-   if(err) throw err;
- else
- {
-   console.log(' random variable added');
-   //res.redirect('/updated')
- }
-});
-
-    host=req.get('host');
-    link="http://"+req.get('host')+"/faculty/verify?rand="+rand+"&id="+sess.user;
-    mailOptions={
-        to : req.session.email,
-        subject : "Please confirm your Email account",
-        html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>" 
-    }
-    console.log(mailOptions);
-    smtpTransport.sendMail(mailOptions, function(error, response){
-     if(error){
-            console.log(error);
-        res.end("error");
-     }else{
-            console.log("Message sent: " + response.message);
-        res.end("sent");
-         }
-});
-});*/
 router.get('/verify',function(req,res){
   console.log(req.protocol+"://"+req.get('host'));
 console.log('id is '+req.query.id);
@@ -342,7 +375,21 @@ console.log('id is '+req.query.id);
   }
   });
   
-
+  router.get('/grievance_type',requireLogin,function(req,res,next){
+    console.log('hiitype'); 
+    console.log(req.session.email)
+      //console.log(req.query.id)
+        Grvtype.grvtype_find(function(err,result)
+    {
+        if(err) throw err;
+        console.log(result);
+      
+    res.send(result);
+    //)
+        }
+    
+    );
+    });
 
 
 module.exports = router;

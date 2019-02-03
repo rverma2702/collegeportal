@@ -2,7 +2,7 @@ $(document).ready(function(){
 
   console.log($(window).width());
 
-  $(function () {
+/*  $(function () {
   $(document).scroll(function () {
     var $nav = $(".navbar-fixed-top");
     $nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
@@ -194,7 +194,7 @@ $('#lgnbtn, .options li').click(function(){
         });
         sr.reveal('#contactheading', {
           duration: 2000,
-          origin:'right',
+          origin:'top',
           distance:'300px',
           viewFactor: 0.5
         });
@@ -211,5 +211,126 @@ $('#lgnbtn, .options li').click(function(){
           viewFactor: 0.5
         });
 
+    $(window).scroll(function(){ 
+        if ($(this).scrollTop() > 200) { 
+            $('#totop').fadeIn(); 
+        } else { 
+            $('#totop').fadeOut(); 
+        } 
+    }); 
+    $('#totop').click(function(){ 
+        $("html, body").animate({ scrollTop: 0 }, 600); 
+        return false; 
+    });*/
+
+  $(function() {
+      // Smooth Scrolling
+      $('a[href*="#"]:not([href="#"])').click(function() {
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+          var target = $(this.hash);
+          target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+          if (target.length) {
+            $('html, body').animate({
+              scrollTop: target.offset().top
+            }, 1000);
+            return false;
+          }
+        }
+      });
+    });
+
+  $(function(){
+    $("#home, #totop").click(function(){
+      $("html,body").animate({
+        scrollTop: 0       //$("#top").offset().top
+      },1000);
+      ;return false;
+    });
+  });
+
+//back to top button appearing.....
+  $(window).scroll(function() {
+    if ($(window).scrollTop() > 300) {
+      $('#totop').fadeIn(200);
+    } else {
+      $('#totop').fadeOut(200);
+    }
+  });
+
+
+$('.wrapper ul li a').click(function(){
+  $('.heading').hide();
+});
+
+//to show different login forms....
+$('.admin-login').click(function(){
+  $('.forms').hide();
+  $('.adminlogin').fadeIn(1000);
+});
+$('.management-login').click(function(){
+  $('.forms').hide();
+  $('.mngmntlogin').fadeIn(1000);
+});
+$('.faculty-login').click(function(){
+  $('.forms').hide();
+  $('.facultylogin').fadeIn(1000);
+});
+$('.gcm-login').click(function(){
+  $('.forms').hide();
+  $('.gcmlogin').fadeIn(1000);
+});
+$('.student-login').click(function(){
+  $('.forms').hide();
+  $('.studentlogin').fadeIn(1000);
+});
+$('.parent-login').click(function(){
+  $('.forms').hide();
+  $('.parentlogin').fadeIn(1000);
+});
+$('.nonteaching-login').click(function(){
+  $('.forms').hide();
+  $('.nonteachinglogin').fadeIn(1000);
+});
+
+
+//to show the signup forms......
+$('#facultysignup').click(function(){
+  $('.forms').fadeOut(100);
+  $('.faculty-reg-form').delay(100).fadeIn(1000);
+});
+$('#studentsignup').click(function(){
+  $('.forms').fadeOut(100);
+  $('.student-reg-form').delay(100).fadeIn(1000);
+});
+$('#parentsignup').click(function(){
+  $('.forms').fadeOut(100);
+  $('.parent-reg-form').delay(100).fadeIn(1000);
+});
+$('#nonteachingsignup').click(function(){
+  $('.forms').fadeOut(100);
+  $('.nonteaching-reg-form').delay(100).fadeIn(1000);
+});
+
+//working of the close button.....
+$('.closebtn').click(function(){
+  $('.forms').fadeOut(500);
+  $('.heading').delay(500).fadeIn(1000);
+});
+
+//scroll reveal for the heading grievance portal....
+        window.sr = ScrollReveal();
+        sr.reveal('#heading1', {
+          duration: 1000,
+          origin:'bottom',
+          distance: '300px',
+          easing: 'cubic-bezier(0.5, 0, 0, 1.3)'
+        });
+        window.sr = ScrollReveal();
+        sr.reveal('#heading2', {
+          duration: 1100,
+          origin:'bottom',
+          distance: '350px',
+          easing: 'cubic-bezier(.5, 0, .2, 1.2)'
+        });
 
 });

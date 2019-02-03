@@ -4,11 +4,10 @@ var expressValidator=require('express-validator');
 var Student=require('../models/Studentdb');
 var Grvtype=require('../models/grvtypedb');
 var Grv=require('../models/grievancedb');
-var bodyParser = require("body-Parser");
 var session = require('express-session'); 
-var nodemailer = require("nodemailer");
 var sess;
 var bcrypt = require('bcryptjs');
+var nodemailer = require("nodemailer");
 var smtpTransport = nodemailer.createTransport({
   service: "Gmail",
   //secure: false,
@@ -40,7 +39,6 @@ function requireLogin(req, res, next) {
          res.redirect('/unknw');
          return;
      }
-     //res.render('newdash',
      var data={
        title:"Student",
       email:user.emailid,
@@ -53,7 +51,6 @@ function requireLogin(req, res, next) {
       mobile:user.mobileno
        }
        res.send(data);
-       //);
     });  
    });
    router.get('/My_Grievances',requireLogin,function(req,res,next){
@@ -64,17 +61,34 @@ function requireLogin(req, res, next) {
     {
         if(err) throw err;
         console.log(result);
-        //res.render('grievances',
         var data={
         info:result
     }
     res.send(data);
-    //)
         }
     
     );
     });
-   router.get('/post',requireLogin, function(req, res, next) {
+    router.get('/GRV',requireLogin,function(req,res,next){//For finding a particular Grievance information
+      console.log('hii'); 
+      console.log(req.query.grv_id);
+         Grv.grv_findbyid(req.query.grv_id,function(err,result)
+      {
+          if(err) throw err;
+          console.log(result);
+          console.log(result.Gtype);
+          var wqe={
+          info:result
+      }
+      var data=result
+      res.send(data);
+          }
+      
+    );
+      });
+    
+  
+    router.get('/post',requireLogin, function(req, res, next) {
     res.render('post',{title:'Student'});
   });
   router.get('/reports',requireLogin, function(req, res, next) {
@@ -146,7 +160,7 @@ Student.getinfobyID(req.session.user,function(err, user){
 
     })
     
-  })
+  });
   var sess;
   
   router.post('/login',function(req,res,next){
@@ -174,8 +188,6 @@ Student.getinfobyID(req.session.user,function(err, user){
         if(isMatch){
            console.log('login sucsseful');
            
-          
-         // sess.password=password1;
          sess.user=user._id;
           sess.type="Student";
           sess.email=user.emailid;
@@ -195,9 +207,6 @@ Student.getinfobyID(req.session.user,function(err, user){
         //res.redirect('/');
         res.status(500).send('not apprv');
       }
-     // sess.user=user._id;
-     // sess.type="Student";
-      //sess.active=1;
      });
     }
     else   
@@ -321,18 +330,13 @@ Student.getinfobyID(req.session.user,function(err, user){
     });
     console.log('success','you are now registered and can login');
     req.flash('success','you are now registered and can login');
-    //sess.user=newUser._id;
-    //sess.email=email;
-    //sess.type="Student";
     res.redirect('/');
-    //res.send('success');
 }
 });
     }
   }
   else{
     res.end('someone already logged in');
-    //res.status(500).send('some');
   }
 });
 /*router.get('/send', function(req, res, next) {

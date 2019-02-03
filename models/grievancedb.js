@@ -30,8 +30,18 @@ grv_id:{
 time:{
     type:Date
 },
-status:{
+status:{// pending/viewed/disposed
     type:String
+},
+active:{//  1:-active 0:-deleted
+type:Boolean,
+default:true
+},
+GCM:{
+type:String
+},
+Reply_date:{
+    type:Date
 },
 reply:{
 type:String
@@ -60,13 +70,31 @@ Grv.find({Gtype:query},null,{sort:{time:-1}},callback);
 Grv.grv_findbyuser=function(query,callback)
 {
 console.log(query);
-    Grv.find({Grievant:query},null,{sort:{time:-1}},callback);
+    Grv.find({$and:[{active:1},{Grievant:query}]},null,{sort:{time:-1}},callback);
+}
+Grv.grv_findbyid=function(query,callback)
+{
+//console.log(query);
+    Grv.findOne({grv_id:query},null,callback);
 }
 
-
-/* author: Ankit Sharma*/
-Grv.grv_findformembers=function(query,callback)
+Grv.grv_all=function(query,callback)//all grievances either either active or not 
 {
 console.log(query);
-    Grv.find({$and:[{gseq: { $in: query} },{status:{$in:['pending','viewed']}}]},callback);
+    Grv.find({active:query},null,{sort:{time:-1}},callback);
 }
+
+Grv.count_grv=function(query,callback){
+   if(query!=null)
+    Grv.countDocuments({status:query},callback);
+  else
+  Grv.countDocuments(null,callback);
+}
+
+/* author: Ankit Sharma*/
+Grv.grv_findformembers_and_mngmnt=function(query,callback)
+{
+console.log(query);
+    Grv.find({$and:[{active:1},{gseq: { $in: query} },{status:{$in:['pending','viewed','disposed']}}]},null,{sort:{time:-1}},callback);
+}
+

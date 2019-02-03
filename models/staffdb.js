@@ -16,6 +16,9 @@ type:Number
     status:{
      type:String
     },
+    access:{
+        type:String
+    },
     gender:{
         type: String,
     },
@@ -55,7 +58,16 @@ module.exports.updateuser = function(id,newvalues, callback){
     //var query={_id:id}; 
     Staff.updateOne(id, newvalues,callback);
  }
-
+ module.exports.update_password = function(id,password, callback){
+   
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(password, salt, function(err, hash) {
+               var query={password:hash};
+            Staff.updateOne(id, query,callback);
+        });
+    });
+   
+}
 module.exports.comparePassword = function(candidatePassword, hash, callback){
     bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
         callback(null, isMatch);
@@ -63,10 +75,8 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
 }
 Staff.apprv_find=function(query,callback)
 {
-   //var query1={approval:query12};
-  // var query2={status:'verified'};    
-    //Staff.find({$and:[{status:'verified'},{approval:query}]},callback);
-    Staff.find({status:query},callback);
+ 
+    Staff.find({$and:[{status:'verified'},{access:query}]},callback);
 }
 module.exports.getinfobyID = function(id, callback){
    // var query = (id.indexOf('@') === -1) ? {mobileno: id} : {emailid: id};

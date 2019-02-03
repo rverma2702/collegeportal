@@ -1,0 +1,39 @@
+<!--Grievance cell members-->
+<!--Admin-->
+<div ng-app="grievances" ng-controller="Rejected_user" >
+    <h1>Rejected Users</h1>
+    <h1>{{msg}}</h1>
+    <div id="rejected_user" class="contenttable">
+        <table class="table table-hover table-striped">
+            <thead class="table-success">
+                <tr>
+                    <th>S.No.</th>
+                    <th>Name</th>
+                    <th>User Type</th>
+                    <th>Email ID</th>
+                    <th>Mobile No.</th>
+                    <th>Actions</th>
+                </tr> 
+            </thead>
+            <tr ng-repeat="student in student">
+                
+                    <td>{{msg}}</td>
+                    <td>{{student.name}}</td>
+                    <td>Student</td>
+                    <td>{{student.emailid}}</td>
+                    <td>{{student.mobileno}}</td>
+                    <td>
+                        <button class="btn btn-primary tablebuttons"><span class="fas fa-undo"></span> Undo Reject</button>
+                    </td>
+                </tr>
+        </table>
+    </div>
+    <div id="loading">
+        <div class="loader">
+        </div>
+        
+        <h1>Loading...</h1>
+    </div>
+
+</div>
+

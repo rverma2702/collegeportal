@@ -16,6 +16,9 @@ var FacultySchema = mongoose.Schema({
     status:{
         type:String
     },
+    access:{
+       Type:String
+    },
     gender:{
         type: String,
     },
@@ -54,10 +57,23 @@ Faculty.apprv_find=function(query,callback)
    //var query1={approval:query12};
   // var query2={status:'verified'};    
    // Faculty.find({$and:[{status:'verified'},{approval:query}]},callback);
-   Faculty.find({status:query},callback);
+   Faculty.find({$and:[{status:'verified'},{access:query}]},callback);
+}
+
+module.exports.update_password = function(id,password, callback){
+    //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
+   //var query={_id:id};
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(password, salt, function(err, hash) {
+               var query={password:hash};
+            Faculty.updateOne(id, query,callback);
+        });
+    });
+   
 }
 module.exports.getUserByID = function(id, callback){
-    var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
+    //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
+   var query= {emailid: id};
     Faculty.findOne(query, callback);
 }
 module.exports.updateuser = function(id,newvalues, callback){

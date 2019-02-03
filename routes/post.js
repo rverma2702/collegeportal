@@ -3,14 +3,85 @@ var router = express.Router();
 var multer  = require('multer');
 var uploads=multer({dest:'./uploads'});
 var uniqid=require('uniqid');
-var expressValidator=require('express-validator');
 var Grv=require('../models/grievancedb');
-var bodyParser = require("body-Parser");
 var datetime = require('node-datetime');
+var Admin=require('../models/Admindb');
+var Member=require('../models/Membersdb');
+var Grvtype=require('../models/grvtypedb');
 var dt = datetime.create();
 var formatted = dt.format('d/m/Y H:M:S');
+var session=require('express-session');
 
 var app = express();
+var nodemailer = require("nodemailer");
+var smtpTransport = nodemailer.createTransport({
+  service: "Gmail",
+  //secure: false,
+  auth: {
+      user: "gportal33@gmail.com",
+      pass: "grievance001"
+  }
+});
+router.get('/reminder',function(req,res,next){
+seq=req.query.seq;
+Member.find_member(seq,function(err,result){
+if (err)
+throw error;
+else
+{
+console.log(result.length);
+    for(i=0;i<result.length;i++)
+{
+    mailOptions={
+        to : result[i].emailid,
+        subject : "Grievance Portal Reminder",
+        html : "Dear Grievance Cell Member,<br>A user has reminded you of a grievance you left unattended.Kindly login using your username and password to check grievance and give reply.<br>Thanks and Regard.<br>ANAND INTERNATIONAL COLLEGE OF ENGINEERING" 
+    }
+    console.log(mailOptions);
+    smtpTransport.sendMail(mailOptions, function(error, response){
+     if(error){
+            console.log(error);
+        //res.status(500).send('error');
+     }else{
+            console.log("Message sent: " + response.message);
+        //res.end("sent");
+         }
+});
+} 
+}
+Admin.admin_find(function(err,result){
+if(err)
+throw error;
+else
+{
+    console.log(result.length);
+    for(i=0;i<result.length;i++){
+
+        mailOptions={
+            to : result[i].emailid,
+            subject : "Grievance Portal Reminder",
+            html : "Dear Admin,<br>A user has raised a reminder  of a grievance left unattended by concerned Cell Member.Kindly login using your username and password to check grievance.<br>Thanks and Regard.<br>ANAND INTERNATIONAL COLLEGE OF ENGINEERING" 
+        }
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+         if(error){
+                console.log(error);
+            //res.status(500).send('error');
+         }else{
+                console.log("Message sent: " + response.message);
+            //res.end("sent");
+             }
+    });        
+    }
+}
+})
+
+})
+
+
+res.end();
+
+});
 router.get('/grv_action',function(req,res,next){
 
     
@@ -33,7 +104,8 @@ router.get('/grv_action',function(req,res,next){
 
 })
 
-router.get('/Grievances',function(req,res,next){
+
+/*router.get('/Grievances',function(req,res,next){
 console.log('hii'); 
   //console.log(req.query.id)
     Grv.grv_find(function(err,result)
@@ -46,7 +118,7 @@ console.log('hii');
     }
 
 );
-});
+});*/
 /*
 router.get('/Grievances_user',function(req,res,next){
     console.log('hii'); 
@@ -67,11 +139,12 @@ router.get('/Grievances_user',function(req,res,next){
     router.post('/reply',uploads.single('file'), function(req, res, next) {
 
         var id={grv_id:req.body.id}
-console.log(req.body.id)
-        var newvalues = {$set: 
+       var newvalues = {$set: 
             {
               reply:req.body.reply,
-              status:'disposed'   
+              status:'disposed',
+              GCM:req.session.name,
+              Reply_date:new Date(dt.now())   
                      }};
 
         Grv.update_grv(id,newvalues,function(err,isUpdate){
@@ -93,9 +166,6 @@ var file=req.file;
 var utype=req.body.usertype;
 var gseq=type.substr(0,type.indexOf('&'));
 var gtype=type.substr(type.indexOf('&')+1);
-
-//req.checkBody('comp1','complaint field is required').notEmpty();
-//req.checkBody('sub','subject  is required').notEmpty();
 if(!req.file)
 {
     file='no file';
@@ -124,7 +194,8 @@ var doc=new Grv({
     subject:sub, //Subject of grievance
     Grv:comp, // Grievance posted
     Grievant:sess.email,
-    status:'pending', // Status of Grv. pending/viewed/disposed
+    active:1,
+    status:'pending', // Status of Grv. pending/viewed/disposed/deleted
     file:file //any Doc. to be uploaded
 
 });
@@ -138,6 +209,8 @@ Grv.grv_post(doc,function(err,doc){
 }
 
 });
+
+
 
 
 module.exports = router;

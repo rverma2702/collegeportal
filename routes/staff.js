@@ -3,8 +3,8 @@ var router = express.Router();
 var expressValidator=require('express-validator');
 var staff=require('../models/staffdb')
 var Grv=require('../models/grievancedb');
-var bodyParser = require("body-Parser");
-console.log('sucessful');
+var Grvtype=require('../models/grvtypedb');
+console.log('successful');
 var session = require('express-session'); 
 var app = express();
 var sess;
@@ -30,7 +30,7 @@ function requireLogin(req, res, next) {
     }
   }
   
-router.get('/dashboard',requireLogin, function(req, res, next) {
+router.get('/my-account',requireLogin, function(req, res, next) {
   sess=req.session;
   staff.getinfobyID(sess.user,function(err, user){
    if(err) throw err;
@@ -39,19 +39,79 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
        res.redirect('/unknw');
        return;
    }
-   res.render('s1',{
+   var data={
      title:"staff",
     name: user.name,
     gender:user.gender,
     id:user.id,
+    email:user.emailid,
     Desig:user.Desig,
     dep:user.dep,
     mobile:user.mobileno,
-    verify:sess.ver
-     });
-
+     }
+res.send(data);
   });  
  });
+
+
+ router.post('/password_reset',function(req,res,next){
+  var cpass=req.body.current_password;
+  var  npass=req.body.new_password;
+  var npass2=req.body.new_password1;
+
+staff.getinfobyID(req.session.user,function(err, user){
+  if(err) throw err;
+  if(!user){
+      console.log("unknown user");
+      res.redirect('/faculty/unknw');
+      return;
+  }
+
+        staff.comparePassword(cpass, user.password, function(err, isMatch){
+            if(err) throw err;
+              if(isMatch){
+
+                  var id={ _id:sess.user };
+                  //console.log('id is '+sess.user.id);
+                  
+                staff.update_password(id,npass,function(err){
+                   if(err) throw err;
+                 else
+                 {
+                   console.log(' password updated');
+                   //res.redirect('/Student/Home')
+                 }
+                }); 
+                }
+
+                else{
+                  console.log('password doesnt match');
+                  res.redirect('/failed');
+                  return;
+                }
+    });
+
+    })
+    
+  })
+  router.get('/GRV',requireLogin,function(req,res,next){//For finding a particular Grievance information
+    console.log('hii'); 
+    console.log(req.query.grv_id);
+       Grv.grv_findbyid(req.query.grv_id,function(err,result)
+    {
+        if(err) throw err;
+        console.log(result);
+        console.log(result.Gtype);
+        var wqe={
+        info:result
+    }
+    var data=result
+    res.send(data);
+        }
+    
+  );
+    });
+  
  router.get('/My_Grievances',requireLogin,function(req,res,next){
   console.log('hii'); 
   console.log(req.session.email)
@@ -60,9 +120,11 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
   {
       if(err) throw err;
       console.log(result);
-      res.render('grievances',{
-      result:result
-  })
+//      res.render('grievances',
+var data={
+      info:result
+  }
+  res.send(data);
       }
   
   );
@@ -140,12 +202,6 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
         res.status(500).send('not apprv');
           return;
       }
-      /*sess.user=user._id;
-      sess.type="staff";
-      sess.active=1;
-      /*if(user.status=="verified")
-       sess.ver=1;
-*/
      });
     }
     else{
@@ -158,12 +214,12 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
       var newvalues = {$set: 
         {
           
-          name:req.body.name,
-          dep:req.body.dep,
-          Desig:req.body.Desig,
+          //name:req.body.name,
+          //dep:req.body.dep,
+          //Desig:req.body.Desig,
           //gender:req.body.gender,
-          id:req.body.id,
-          //mobileno:req.body.Mobile
+          //emailid:req.body.email,
+          mobileno:req.body.mobile
       } 
     
     };
@@ -173,7 +229,7 @@ router.get('/dashboard',requireLogin, function(req, res, next) {
      else
      {
        console.log(' successfuly update ');
-       res.redirect('/staff/dashboard')
+       res.redirect('/staff/Home#!/')
      }
     });
   
@@ -315,5 +371,37 @@ console.log('id is '+req.query.id);
       res.end("<h1>Request is from unknown source");
   }
   });
-  
+  router.get('/grievance_type',requireLogin,function(req,res,next){
+    console.log('hiitype'); 
+    console.log(req.session.email)
+      //console.log(req.query.id)
+        Grvtype.grvtype_find(function(err,result)
+    {
+        if(err) throw err;
+        console.log(result);
+      
+    res.send(result);
+    //)
+        }
+    
+    );
+    });
+    router.get('/grievance_type',requireLogin,function(req,res,next){
+      console.log('hiitype'); 
+      console.log(req.session.email)
+        //console.log(req.query.id)
+          Grvtype.grvtype_find(function(err,result)
+      {
+          if(err) throw err;
+          console.log(result);
+        
+      res.send(result);
+      //)
+          }
+      
+      );
+      });
+
+
+
 module.exports = router;

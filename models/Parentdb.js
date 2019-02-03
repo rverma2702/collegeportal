@@ -20,6 +20,9 @@ var ParentSchema = mongoose.Schema({
     status:{
      type:String
     },
+    access:{
+      Type:String
+    },
     Cdate:{
    type:String
     },
@@ -76,10 +79,7 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
 }
 Parent.apprv_find=function(query,callback)
 {
-   //var query1={approval:query12};
-  // var query2={status:'verified'};    
-   // Parent.find({$and:[{status:'verified'},{approval:query}]},callback);
-   Parent.find({status:query},callback);
+   Parent.find({$and:[{status:'verified'},{access:query}]},callback);
 }
 module.exports.createUser = function(newUser, callback){
     bcrypt.genSalt(10, function(err, salt) {

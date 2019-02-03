@@ -40,6 +40,14 @@ grvtype.update_grvtype=function(id,newvalues,callback)
 {
     grvtype.updateOne(id, newvalues,callback);
 }
+
+grvtype.grvtype_seq_find=function(grv,callback)
+{
+query={grvtype:grv}
+
+grvtype.findOne(query,callback);
+}
+
 grvtype.grvtype_find=function(callback)
 {
  
