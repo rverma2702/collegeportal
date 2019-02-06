@@ -3,7 +3,7 @@
 <div ng-app="grievances" ng-controller="Admin_GCM">
     <h1>Grievance Cell Members List</h1>
     <div>
-        <button class="btn">Create New</button>
+        <button class="btn" id="createnew">Create New</button>
     </div>
     <div id="grievances" class="contenttable">
         <table class="table table-hover table-striped">
@@ -33,7 +33,7 @@
         </table>
     </div>
 
-    <div class="detailbackground">
+    <div class="detailbackground hide">
         <div class="detailpopup">
 
             <h1>Add New Member</h1>
@@ -103,3 +103,12 @@
 
 </div>
 
+<script type="text/javascript">
+    $('#closebutton').click(function(){
+        $('.detailbackground').fadeOut(500);
+    });
+
+    $('#createnew').click(function(){
+        $('.detailbackground').fadeIn(500);
+    });
+</script>
