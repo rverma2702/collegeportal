@@ -71,10 +71,9 @@ staff.getinfobyID(req.session.user,function(err, user){
             if(err) throw err;
               if(isMatch){
 
-                  var id={ _id:sess.user };
-                  //console.log('id is '+sess.user.id);
                   
-                staff.update_password(id,npass,function(err){
+                  
+                staff.update_password(sess.user,npass,function(err){
                    if(err) throw err;
                  else
                  {
@@ -168,30 +167,22 @@ var data={
           res.status(500).send('Unauthorized User');
           return;
       }
-      if(user.status=='approved')
+      if(user.access=='approved')
      {
       staff.comparePassword(password, user.password, function(err, isMatch){
         if(err) throw err;
         if(isMatch){
            console.log('login sucsseful');      
-           if(user.status=='verified')
-           {sess.ver=1;
-           }
-           else
-           {
-             sess.ver=0;
-             sess.email=user.emailid;
-          }
+          
+          sess.email=user.emailid;
           sess.user=user._id;
           sess.type="staff";
           sess.active=1;
-          //res.redirect('/staff/Home');
           res.send('success');
          
         }
         else{
           console.log('invalid password');
-          //res.redirect('/staff/pass');
           res.status(500).send('pass');
           return;
         }
@@ -371,7 +362,46 @@ console.log('id is '+req.query.id);
       res.end("<h1>Request is from unknown source");
   }
   });
-  router.get('/grievance_type',requireLogin,function(req,res,next){
+
+
+  router.post('/forgot_pass',function(req,res,next){
+
+    var id=req.body.id;
+     staff.getUserByID(id,function(err, user){
+       if(err) throw err;
+       if(!user){
+           console.log("unknown user");
+           //res.redirect('/Student/unknw');
+           res.status(500).send('Unauthorized User');
+           return;
+       }
+       /*var password = generator.generate({
+         length: 10,
+         numbers: true
+     });*/
+     var password='sahil';
+     staff.update_password(id,password,function(err){
+      if(err) throw err;
+       
+      host=req.get('host');
+      mailOptions={
+          to : id,
+          subject : "Password Updated",
+          html : "Hello,<br> your new password for EduGrievance Portal is: <br>"+password+"<br> Thanks and Regards <br> <b>Anand International College Of Engineering</b>" 
+      }
+      console.log(mailOptions);
+      smtpTransport.sendMail(mailOptions, function(error, response){
+       if(error) throw err;
+       else{
+           console.log("Message sent: " + response.message);
+           res.send('success');       
+             }
+  });
+     });
+     }); 
+   });
+
+  /*router.get('/grievance_type',requireLogin,function(req,res,next){
     console.log('hiitype'); 
     console.log(req.session.email)
       //console.log(req.query.id)
@@ -385,7 +415,7 @@ console.log('id is '+req.query.id);
         }
     
     );
-    });
+    });*/
     router.get('/grievance_type',requireLogin,function(req,res,next){
       console.log('hiitype'); 
       console.log(req.session.email)

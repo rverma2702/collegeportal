@@ -317,10 +317,37 @@ $('.closebtn').click(function(){
   $('.heading').delay(500).fadeIn(1000);
 });
 
-$('.forgotpassword').click(function(){
+
+$('.Admin_forgotpassword').click(function(){
   $('.forms').fadeOut(500);
-  $('.forgotpass').delay(500).fadeIn(1000);
+  $('.Admin_forgotpass').delay(500).fadeIn(1000);
 });
+$('.Student_forgotpassword').click(function(){
+  $('.forms').fadeOut(500);
+  $('.Student_forgotpass').delay(500).fadeIn(1000);
+});
+$('.Staff_forgotpassword').click(function(){
+  $('.forms').fadeOut(500);
+  $('.Staff_forgotpass').delay(500).fadeIn(1000);
+});
+$('.Parent_forgotpassword').click(function(){
+  $('.forms').fadeOut(500);
+  $('.Parent_forgotpass').delay(500).fadeIn(1000);
+});
+$('.Faculty_forgotpassword').click(function(){
+  $('.forms').fadeOut(500);
+  $('.Faculty_forgotpass').delay(500).fadeIn(1000);
+});
+$('.Gcm_forgotpassword').click(function(){
+  $('.forms').fadeOut(500);
+  $('.Gcm_forgotpass').delay(500).fadeIn(1000);
+});
+
+$('.mngmnt_forgotpassword').click(function(){
+  $('.forms').fadeOut(500);
+  $('.mngmnt_forgotpass').delay(500).fadeIn(1000);
+});
+
 
 //scroll reveal for the heading grievance portal....
         window.sr = ScrollReveal();

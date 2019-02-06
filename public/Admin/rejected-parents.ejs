@@ -1,6 +1,6 @@
-Approved<!--Grievance cell members-->
+<!--Grievance cell members-->
 <!--Admin-->
-<div ng-app="grievances" ng-controller="Admin_rejected_user" ng-init="init('parent')">
+<div ng-app="grievances" ng-controller="Admin_Rejected_user" ng-init="init('parent')">
     <h1>Rejected Parents List</h1>
     <div id="rejected_list" class="contenttable">
         <table class="table table-hover table-striped">
@@ -21,8 +21,8 @@ Approved<!--Grievance cell members-->
                 <td>{{user.mobileno}}</td>
                 <td>{{user.relation}}</td>
                 <td>
-                <button ng-click="Deactivate_user('Parent',user.emailid)" class="btn btn-danger">
-                    Activate
+                <button ng-click="Undo_rejected('Parent',user.emailid)" class="btn btn-success">
+                    Undo Reject
                 </button>
                 </td>
             </tr>

@@ -569,8 +569,6 @@ $('#nonteachinglogin').click(function(e) {
 			}
 	});
 
-
-
 //student registration validation...
 
 $('#studentsignup').click(function(e){
@@ -592,3 +590,407 @@ $('#studentsignup').click(function(e){
 
 			return false;
 		});
+
+//Forgot Password Validation
+		$('#Student_forgotpass').click(function(e) {
+			e.preventDefault();
+			var a = document.Student_forgotpass.email.value;
+			//var b = document.nonteachinglogin.password.value;
+	
+			if (a=="") {
+				$('#forgotemail .fa-times').removeClass('hide');
+				$('#forgotemail').addClass('wrong').removeClass('correct');
+	
+			}
+	
+			if(a!=""){ 
+	
+						$('#forgotemail .fa-times').addClass('hide');
+	
+				
+						$.ajax({
+							 type: 'post',
+							 datatype: "json",
+							 data: {
+								id: a,
+							 },
+							 url: 'http://localhost:3000/Student/forgot_pass', //node.js server is running
+							 error: function(error){
+										if(error.responseText == 'Unauthorized User'){
+												console.log(error.responseText);
+												$('#forgotemail').addClass('wrong').removeClass('correct');
+												$('#forgotemail .fa-times').removeClass('hide');
+												$('#forgotemail .fa-check').addClass('hide');
+												return false;
+											}
+											/*else if (error.responseText == 'pass') {
+												console.log(error.responseText);
+												$('#forgotemail').removeClass('wrong').addClass('correct');
+												$('#forgotemail .fa-check').removeClass('hide');
+												$('#forgotemail .fa-times').addClass('hide');
+											}*/
+											else{
+												console.log('Unknown Error');
+												$('#nonteachingerror').text('unknown error! please try again.');
+											}
+										},
+							 success: function(data) {
+								 if (data === 'success') { 
+									console.log(data);
+									$('#forgotemail, #nonteachingpass').removeClass('wrong').addClass('correct');
+									$('#forgotemail .fa-times, #nonteachingpass .fa-times').addClass('hide');
+									$('#forgotemail .fa-check, #nonteachingpass .fa-check').removeClass('hide');
+									alert('New Password Emailed');
+									window.location.href = "http://localhost:3000";
+									return false;
+								 }
+							 }
+						 });
+					
+				}
+		});
+	
+		$('#Staff_forgotpass').click(function(e) {
+			e.preventDefault();
+			var a = document.Staff_forgotpass.email.value;
+			//var b = document.nonteachinglogin.password.value;
+	
+			if (a=="") {
+				$('#forgotemail .fa-times').removeClass('hide');
+				$('#forgotemail').addClass('wrong').removeClass('correct');
+	
+			}
+	
+			if(a!=""){ 
+	
+						$('#forgotemail .fa-times').addClass('hide');
+	
+				
+						$.ajax({
+							 type: 'post',
+							 datatype: "json",
+							 data: {
+								id: a,
+							 },
+							 url: 'http://localhost:3000/staff/forgot_pass', //node.js server is running
+							 error: function(error){
+										if(error.responseText == 'Unauthorized User'){
+												console.log(error.responseText);
+												$('#forgotemail').addClass('wrong').removeClass('correct');
+												$('#forgotemail .fa-times').removeClass('hide');
+												$('#forgotemail .fa-check').addClass('hide');
+												return false;
+											}
+											/*else if (error.responseText == 'pass') {
+												console.log(error.responseText);
+												$('#forgotemail').removeClass('wrong').addClass('correct');
+												$('#forgotemail .fa-check').removeClass('hide');
+												$('#forgotemail .fa-times').addClass('hide');
+											}*/
+											else{
+												console.log('Unknown Error');
+												$('#nonteachingerror').text('unknown error! please try again.');
+											}
+										},
+							 success: function(data) {
+								 if (data === 'success') { 
+									console.log(data);
+									$('#forgotemail, #nonteachingpass').removeClass('wrong').addClass('correct');
+									$('#forgotemail .fa-times, #nonteachingpass .fa-times').addClass('hide');
+									$('#forgotemail .fa-check, #nonteachingpass .fa-check').removeClass('hide');
+									alert('New Password Emailed');
+									window.location.href = "http://localhost:3000";
+									return false;
+								 }
+							 }
+						 });
+					
+				}
+		});
+
+
+		$('#Parent_forgotpass').click(function(e) {
+			e.preventDefault();
+			var a = document.Parent_forgotpass.email.value;
+			//var b = document.nonteachinglogin.password.value;
+	
+			if (a=="") {
+				$('#forgotemail .fa-times').removeClass('hide');
+				$('#forgotemail').addClass('wrong').removeClass('correct');
+	
+			}
+	
+			if(a!=""){ 
+	
+						$('#forgotemail .fa-times').addClass('hide');
+	
+				
+						$.ajax({
+							 type: 'post',
+							 datatype: "json",
+							 data: {
+								id: a,
+							 },
+							 url: 'http://localhost:3000/Parent/forgot_pass', //node.js server is running
+							 error: function(error){
+										if(error.responseText == 'Unauthorized User'){
+												console.log(error.responseText);
+												$('#forgotemail').addClass('wrong').removeClass('correct');
+												$('#forgotemail .fa-times').removeClass('hide');
+												$('#forgotemail .fa-check').addClass('hide');
+												return false;
+											}
+											/*else if (error.responseText == 'pass') {
+												console.log(error.responseText);
+												$('#forgotemail').removeClass('wrong').addClass('correct');
+												$('#forgotemail .fa-check').removeClass('hide');
+												$('#forgotemail .fa-times').addClass('hide');
+											}*/
+											else{
+												console.log('Unknown Error');
+												$('#nonteachingerror').text('unknown error! please try again.');
+											}
+										},
+							 success: function(data) {
+								 if (data === 'success') { 
+									console.log(data);
+									$('#forgotemail, #nonteachingpass').removeClass('wrong').addClass('correct');
+									$('#forgotemail .fa-times, #nonteachingpass .fa-times').addClass('hide');
+									$('#forgotemail .fa-check, #nonteachingpass .fa-check').removeClass('hide');
+									alert('New Password Emailed');
+									window.location.href = "http://localhost:3000";
+									return false;
+								 }
+							 }
+						 });
+					
+				}
+		});
+
+
+		$('#Faculty_forgotpass').click(function(e) {
+			e.preventDefault();
+			var a = document.Faculty_forgotpass.email.value;
+			//var b = document.nonteachinglogin.password.value;
+	
+			if (a=="") {
+				$('#forgotemail .fa-times').removeClass('hide');
+				$('#forgotemail').addClass('wrong').removeClass('correct');
+	
+			}
+	
+			if(a!=""){ 
+	
+						$('#forgotemail .fa-times').addClass('hide');
+	
+				
+						$.ajax({
+							 type: 'post',
+							 datatype: "json",
+							 data: {
+								id: a,
+							 },
+							 url: 'http://localhost:3000/faculty/forgot_pass', //node.js server is running
+							 error: function(error){
+										if(error.responseText == 'Unauthorized User'){
+												console.log(error.responseText);
+												$('#forgotemail').addClass('wrong').removeClass('correct');
+												$('#forgotemail .fa-times').removeClass('hide');
+												$('#forgotemail .fa-check').addClass('hide');
+												return false;
+											}
+											/*else if (error.responseText == 'pass') {
+												console.log(error.responseText);
+												$('#forgotemail').removeClass('wrong').addClass('correct');
+												$('#forgotemail .fa-check').removeClass('hide');
+												$('#forgotemail .fa-times').addClass('hide');
+											}*/
+											else{
+												console.log('Unknown Error');
+												$('#nonteachingerror').text('unknown error! please try again.');
+											}
+										},
+							 success: function(data) {
+								 if (data === 'success') { 
+									console.log(data);
+									$('#forgotemail, #nonteachingpass').removeClass('wrong').addClass('correct');
+									$('#forgotemail .fa-times, #nonteachingpass .fa-times').addClass('hide');
+									$('#forgotemail .fa-check, #nonteachingpass .fa-check').removeClass('hide');
+									alert('New Password Emailed');
+									window.location.href = "http://localhost:3000";
+									return false;
+								 }
+							 }
+						 });
+					
+				}
+		});
+		$('#Admin_forgotpass').click(function(e) {
+			e.preventDefault();
+			var a = document.Admin_forgotpass.email.value;
+			if (a=="") {
+				$('#forgotemail .fa-times').removeClass('hide');
+				$('#forgotemail').addClass('wrong').removeClass('correct');
+	
+			}
+	
+			if(a!=""){ 
+	
+						$('#forgotemail .fa-times').addClass('hide');
+	
+				
+						$.ajax({
+							 type: 'post',
+							 datatype: "json",
+							 data: {
+								id: a,
+							 },
+							 url: 'http://localhost:3000/Admin/forgot_pass', //node.js server is running
+							 error: function(error){
+										if(error.responseText == 'Unauthorized User'){
+												console.log(error.responseText);
+												$('#forgotemail').addClass('wrong').removeClass('correct');
+												$('#forgotemail .fa-times').removeClass('hide');
+												$('#forgotemail .fa-check').addClass('hide');
+												return false;
+											}
+	
+											else{
+												console.log('Unknown Error');
+												$('#nonteachingerror').text('unknown error! please try again.');
+											}
+										},
+							 success: function(data) {
+								 if (data === 'success') { 
+									console.log(data);
+									$('#forgotemail, #nonteachingpass').removeClass('wrong').addClass('correct');
+									$('#forgotemail .fa-times, #nonteachingpass .fa-times').addClass('hide');
+									$('#forgotemail .fa-check, #nonteachingpass .fa-check').removeClass('hide');
+									alert('New Password Emailed');
+									window.location.href = "http://localhost:3000";
+									return false;
+								 }
+							 }
+						 });
+					
+				}
+		});
+
+		$('#Gcm_forgotpass').click(function(e) {
+			e.preventDefault();
+			var a = document.Gcm_forgotpass.email.value;
+			//var b = document.nonteachinglogin.password.value;
+	
+			if (a=="") {
+				$('#forgotemail .fa-times').removeClass('hide');
+				$('#forgotemail').addClass('wrong').removeClass('correct');
+	
+			}
+	
+			if(a!=""){ 
+	
+						$('#forgotemail .fa-times').addClass('hide');
+	
+				
+						$.ajax({
+							 type: 'post',
+							 datatype: "json",
+							 data: {
+								id: a,
+							 },
+							 url: 'http://localhost:3000/Members/forgot_pass', //node.js server is running
+							 error: function(error){
+										if(error.responseText == 'Unauthorized User'){
+												console.log(error.responseText);
+												$('#forgotemail').addClass('wrong').removeClass('correct');
+												$('#forgotemail .fa-times').removeClass('hide');
+												$('#forgotemail .fa-check').addClass('hide');
+												return false;
+											}
+											/*else if (error.responseText == 'pass') {
+												console.log(error.responseText);
+												$('#forgotemail').removeClass('wrong').addClass('correct');
+												$('#forgotemail .fa-check').removeClass('hide');
+												$('#forgotemail .fa-times').addClass('hide');
+											}*/
+											else{
+												console.log('Unknown Error');
+												$('#nonteachingerror').text('unknown error! please try again.');
+											}
+										},
+							 success: function(data) {
+								 if (data === 'success') { 
+									console.log(data);
+									$('#forgotemail, #nonteachingpass').removeClass('wrong').addClass('correct');
+									$('#forgotemail .fa-times, #nonteachingpass .fa-times').addClass('hide');
+									$('#forgotemail .fa-check, #nonteachingpass .fa-check').removeClass('hide');
+									alert('New Password Emailed');
+									window.location.href = "http://localhost:3000";
+									return false;
+								 }
+							 }
+						 });
+					
+				}
+		});
+
+		$('#mngmnt_forgotpass').click(function(e) {
+			e.preventDefault();
+			var a = document.mngmnt_forgotpass.email.value;
+			//var b = document.nonteachinglogin.password.value;
+	
+			if (a=="") {
+				$('#forgotemail .fa-times').removeClass('hide');
+				$('#forgotemail').addClass('wrong').removeClass('correct');
+	
+			}
+	
+			if(a!=""){ 
+	
+						$('#forgotemail .fa-times').addClass('hide');
+	
+				
+						$.ajax({
+							 type: 'post',
+							 datatype: "json",
+							 data: {
+								id: a,
+							 },
+							 url: 'http://localhost:3000/mngmnt/forgot_pass', //node.js server is running
+							 error: function(error){
+										if(error.responseText == 'Unauthorized User'){
+												console.log(error.responseText);
+												$('#forgotemail').addClass('wrong').removeClass('correct');
+												$('#forgotemail .fa-times').removeClass('hide');
+												$('#forgotemail .fa-check').addClass('hide');
+												return false;
+											}
+											/*else if (error.responseText == 'pass') {
+												console.log(error.responseText);
+												$('#forgotemail').removeClass('wrong').addClass('correct');
+												$('#forgotemail .fa-check').removeClass('hide');
+												$('#forgotemail .fa-times').addClass('hide');
+											}*/
+											else{
+												console.log('Unknown Error');
+												$('#nonteachingerror').text('unknown error! please try again.');
+											}
+										},
+							 success: function(data) {
+								 if (data === 'success') { 
+									console.log(data);
+									$('#forgotemail, #nonteachingpass').removeClass('wrong').addClass('correct');
+									$('#forgotemail .fa-times, #nonteachingpass .fa-times').addClass('hide');
+									$('#forgotemail .fa-check, #nonteachingpass .fa-check').removeClass('hide');
+									alert('New Password Emailed');
+									window.location.href = "http://localhost:3000";
+									return false;
+								 }
+							 }
+						 });
+					
+				}
+		});
+
+	
+	

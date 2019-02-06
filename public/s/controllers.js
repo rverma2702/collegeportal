@@ -3,7 +3,6 @@
 app.controller("Gcm_grievances", function ($http,$scope,$window) {
     $scope.msg = "I love London";
     $http.get("/Members/Grievances").then(function (response) {
-        //$scope.result = response.result1;
         $scope.result=response.data.info;
         $('#loading').hide();
         $('#grievances').fadeIn(500);
@@ -18,7 +17,7 @@ $scope.id=id;
             $scope.data=response.data ;
             $scope.msg ="hiiiii";
         }); 
-     //   $('.detailbackground').fadeIn(500);
+     
     }
     $scope.reply_popup = function(id){
         $('.detailbackground-reply').fadeIn(500);
@@ -36,7 +35,6 @@ $scope.id=id;
          reply:$scope.Reply,
          id:id    
         };
-           // $scope.reply=$scope.Reply
         $http.post("/post/reply",$scope.form).then(function(response){
             $window.location.reload();
         })
@@ -47,8 +45,6 @@ $scope.id=id;
 });
 
 app.controller("Gcm", function ($http,$scope,$mdDialog,$window) {
-    // $scope.msg = "I love London";
- 
     $http.get("/Members/my-account").then(function (response) {
          $scope.name = response.data.name;
          $scope.Desg = response.data.designation;
@@ -102,9 +98,7 @@ app.controller("Gcm", function ($http,$scope,$mdDialog,$window) {
 
 
 app.controller("Student_grievances", function ($http,$scope,$window) {
-  //  $scope.msg = "I love London";
     $http.get("/Student/My_Grievances").then(function (response) {
-        //$scope.result = response.result1;
         $scope.result=response.data.info;
         $('#loading').hide();
         $('#grievances').fadeIn(500);
@@ -118,7 +112,6 @@ $scope.id=id;
             $scope.data=response.data ;
             $scope.msg ="hiiiii";
         }); 
-     //   $('.detailbackground').fadeIn(500);
     }
 
     $scope.remind=function(sequence){
@@ -128,8 +121,6 @@ $scope.id=id;
     }
 });
 app.controller("Student", function ($http,$scope,$window,$mdDialog) {
-    // $scope.msg = "I love London";
- 
     $http.get("/Student/my-account").then(function (response) {
          $scope.name = response.data.name;
          $scope.id = response.data.id;
@@ -242,7 +233,6 @@ app.controller("Parent_grievances", function ($http,$scope) {
 });
 
 app.controller("Parent", function ($http,$scope,$window,$mdDialog) {
-   // $scope.msg = "I love London";
     $http.get("/Parent/my-account").then(function (response) {
         $scope.name = response.data.name;
         $scope.relation = response.data.rel;
@@ -263,7 +253,6 @@ app.controller("Parent", function ($http,$scope,$window,$mdDialog) {
             mobile:$scope.mobile
         }
         $http.post("/Parent/update",$scope.form).then(function(response){
-         //location.reload();  
          var update = $mdDialog.confirm()
          .title('Successfully Updated!')
          .targetEvent(ev)
@@ -376,7 +365,6 @@ app.controller("NonTeaching", function ($http,$scope,$window,$mdDialog) {
              mobile:$scope.mobile,
          }
          $http.post("/staff/update",$scope.form).then(function(response){   
-            //location.reload();
             var update = $mdDialog.confirm()
             .title('Successfully Updated!')
             .targetEvent(ev)
@@ -626,7 +614,6 @@ $scope.id=id;
     $scope.init=function(active){
     if(active==1)
     {
-        $scope.msg="I LOVE INDIA";
     $http.get('/mngmnt/All_Grievances?active='+'1').then(function(response){
    $scope.result=response.data.info;
    $('#loading').hide();
@@ -707,7 +694,6 @@ app.controller("Management_GCM", function ($http,$scope,$window,$mdDialog) {
 
  $http.get("/mngmnt/GCM_List").then(function(response){
   $scope.members=response.data.info;
-  $scope.msg="I LOve India";
   $('#loading').hide();
   $('#grievances').fadeIn(500);
  });
@@ -717,7 +703,7 @@ app.controller("Management_apprv_user", function ($http,$scope,$window,$mdDialog
 
     $scope.init=function(user){
     if(user=='faculty')
-    {    $scope.msg="user is faculty";
+    {    
     $http.get('/mngmnt/approve_user?user='+'faculty').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -728,7 +714,6 @@ app.controller("Management_apprv_user", function ($http,$scope,$window,$mdDialog
     }
     else if(user=='parent')
     {
-    $scope.msg="user is parent";
     $http.get('/mngmnt/approve_user?user='+'parent').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -740,7 +725,6 @@ app.controller("Management_apprv_user", function ($http,$scope,$window,$mdDialog
      
      else if(user=='staff')
      {
-        $scope.msg="user is staff";
      $http.get('/mngmnt/approve_user?user='+'staff').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -751,8 +735,6 @@ app.controller("Management_apprv_user", function ($http,$scope,$window,$mdDialog
     }
     else if(user=='student') 
     {  
-    $scope.msg="user is student";
-     
     $http.get('/mngmnt/approve_user?user='+'student').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -765,7 +747,7 @@ app.controller("Management_apprv_user", function ($http,$scope,$window,$mdDialog
 
     $scope.init=function(user){
     if(user=='faculty')
-    {    $scope.msg="user is faculty";
+    {    
     $http.get('/mngmnt/pending_user?user='+'faculty').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -776,7 +758,6 @@ app.controller("Management_apprv_user", function ($http,$scope,$window,$mdDialog
     }
     else if(user=='parent')
     {
-    $scope.msg="user is parent";
     $http.get('/mngmnt/pending_user?user='+'parent').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -788,7 +769,6 @@ app.controller("Management_apprv_user", function ($http,$scope,$window,$mdDialog
      
      else if(user=='staff')
      {
-        $scope.msg="user is staff";
      $http.get('/mngmnt/pending_user?user='+'staff').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -799,8 +779,6 @@ app.controller("Management_apprv_user", function ($http,$scope,$window,$mdDialog
     }
     else if(user=='student') 
     {  
-    $scope.msg="user is student";
-     
     $http.get('/mngmnt/pending_user?user='+'student').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -869,8 +847,6 @@ $scope.Grv_type_deactivate=function(id)
 
 
 app.controller("Admin", function ($http,$scope,$window,$mdDialog) {
-    // $scope.msg = "I love London";
- 
     $http.get("/Admin/my-account").then(function (response) {
          $scope.name = response.data.name;
          $scope.mobile = response.data.mobile;
@@ -925,7 +901,6 @@ app.controller("Admin_GCM", function ($http,$scope,$window,$mdDialog) {
 
     $http.get("/Admin/GCM_List").then(function(response){
      $scope.members=response.data.info;
-     //$scope.msg="I LOve India";
      $('#loading').hide();
      $('#grievances').fadeIn(500);
     });
@@ -945,17 +920,51 @@ $window.location.reload();
 }
    
    });
-   app.controller('Rejected_user',function($http,$scope,$window){
+   app.controller('Admin_Rejected_user',function($http,$scope,$window){
+    $scope.init=function(user,ev){
+        if(user=='faculty')
+        {
+        $http.get('/Admin/rejected_user?user='+'faculty').then(function(response){
+            $scope.users=response.data.info;  
+            $('#loading').hide();
+            $('#rejected_list').fadeIn(500);
+           
+        });
+     
+        }
+        else if(user=='parent')
+        {
+        $scope.msg="user is parent";
+        $http.get('/Admin/rejected_user?user='+'parent').then(function(response){
+            $scope.users=response.data.info;    
+            $('#loading').hide();
+            $('#rejected_list').fadeIn(500);
+           
+        });
+        } 
+         
+         
+         else if(user=='staff')
+         {
+           
+         $http.get('/Admin/rejected_user?user='+'staff').then(function(response){
+            $scope.users=response.data.info;    
+            $('#loading').hide();
+            $('#rejected_list').fadeIn(500);
+           
+        });
+    
+        }
+        else if(user=='student') 
+        {          
+        $http.get('/Admin/rejected_user?user='+'student').then(function(response){
+            $scope.users=response.data.info;    
+            $('#loading').hide();
+            $('#rejected_list').fadeIn(500);
+        });
+        }
+    }
 
-
-    $http.get('/Admin/rejected_user').then(function(response){
-        $scope.student=response.result.student;
-        $scope.parent=response.result.parent;
-        $scope.staff=response.result.staff;
-        $scope.faculty=response.result.faculty;
-        $('#loading').hide();
-        $('#rejected_user').fadeIn(500);
-    })
     $scope.Undo_rejected=function(type,user,ev){
         $scope.form={
             type:type,
@@ -971,8 +980,10 @@ $window.location.reload();
       $mdDialog.show(update).then(function() {
         $window.location.reload();
       });
-    
+
         });
+        
+
 
     }
    })
@@ -980,7 +991,7 @@ $window.location.reload();
 
     $scope.init=function(user){
     if(user=='faculty')
-    {    $scope.msg="user is faculty";
+    {    
     $http.get('/Admin/approve_user?user='+'faculty').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -991,7 +1002,6 @@ $window.location.reload();
     }
     else if(user=='parent')
     {
-    $scope.msg="user is parent";
     $http.get('/Admin/approve_user?user='+'parent').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -1003,7 +1013,6 @@ $window.location.reload();
      
      else if(user=='staff')
      {
-        $scope.msg="user is staff";
      $http.get('/Admin/approve_user?user='+'staff').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -1048,7 +1057,7 @@ $scope.Deactivate_user=function(type,user,ev){
 
     $scope.init=function(user){
     if(user=='faculty')
-    {    $scope.msg="user is faculty";
+    {  
     $http.get('/Admin/pending_user?user='+'faculty').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -1059,7 +1068,7 @@ $scope.Deactivate_user=function(type,user,ev){
     }
     else if(user=='parent')
     {
-    $scope.msg="user is parent";
+  
     $http.get('/Admin/pending_user?user='+'parent').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -1071,7 +1080,6 @@ $scope.Deactivate_user=function(type,user,ev){
      
      else if(user=='staff')
      {
-        $scope.msg="user is staff";
      $http.get('/Admin/pending_user?user='+'staff').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -1081,9 +1089,7 @@ $scope.Deactivate_user=function(type,user,ev){
 
     }
     else if(user=='student') 
-    {  
-    $scope.msg="user is student";
-     
+    { 
     $http.get('/Admin/pending_user?user='+'student').then(function(response){
         $scope.users=response.data.info;    
         $('#loading').hide();
@@ -1123,8 +1129,7 @@ $scope.id=id;
             $('.detailbackground').fadeIn(500);
             $scope.data=response.data ;
 
-        }); 
-     //   $('.detailbackground').fadeIn(500);
+        });
     }
     $scope.delete = function(id,ev){
 $scope.id=id;
@@ -1145,7 +1150,6 @@ $scope.id=id;
     $scope.init=function(active){
     if(active==1)
     {
-        $scope.msg="I LOVE INDIA";
     $http.get('/Admin/All_Grievances?active='+'1').then(function(response){
    $scope.result=response.data.info;
    $('#loading').hide();
