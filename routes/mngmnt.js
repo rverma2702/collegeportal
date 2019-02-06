@@ -8,6 +8,17 @@ var Parent=require('../models/Parentdb');
 var faculty=require('../models/facultydb');
 var Staff=require('../models/staffdb');
 var session=require('express-session');
+
+var nodemailer = require("nodemailer");
+
+var smtpTransport = nodemailer.createTransport({
+  service: "Gmail",
+  //secure: false,
+  auth: {
+      user: "gportal33@gmail.com",
+      pass: "grievance001"
+  }
+});
 //var pdfMake=require('pdfmake');
 
 /*var fonts = {
@@ -25,7 +36,7 @@ var fs = require('fs');
  */
 
 
-const image2base64 = require('image-to-base64');
+//const image2base64 = require('image-to-base64');
 console.log('successful');
 var sess;
 function requireLogin(req, res, next) {
@@ -301,10 +312,9 @@ data={
               if(err) throw err;
                 if(isMatch){
   
-                    var id={ _id:sess.user };
-                    //console.log('id is '+sess.user.id);
+                   
                     if(npass==npass2){
-                  mngmnt.update_password(id,npass,function(err){
+                  mngmnt.update_password(sess.user,npass,function(err){
                      if(err) throw err;
                    else
                    {
@@ -388,6 +398,44 @@ var id=req.body.id;
       res.status(500).send('some');
     }
     });
+
+    router.post('/forgot_pass',function(req,res,next){
+
+      var id=req.body.id;
+       mngmnt.getUserByID(id,function(err, user){
+         if(err) throw err;
+         if(!user){
+             console.log("unknown user");
+             //res.redirect('/Student/unknw');
+             res.status(500).send('Unauthorized User');
+             return;
+         }
+         /*var password = generator.generate({
+           length: 10,
+           numbers: true
+       });*/
+       var password='sahil';
+       mngmnt.update_password(id,password,function(err){
+        if(err) throw err;
+         
+        host=req.get('host');
+        mailOptions={
+            to : id,
+            subject : "Password Updated",
+            html : "Hello,<br> your new password for EduGrievance Portal is: <br>"+password+"<br> Thanks and Regards <br> <b>Anand International College Of Engineering</b>" 
+        }
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+         if(error) throw err;
+         else{
+             console.log("Message sent: " + response.message);
+             res.send('success');       
+               }
+    });
+       });
+       }); 
+     });
+  
 
 
     router.post('/consolidate_grv',function(req,res,next){

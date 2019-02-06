@@ -33,7 +33,7 @@ module.exports.getinfobyID = function(id, callback){
     Admin.findOne(query, callback);
 }
 module.exports.update_password = function(id,password, callback){
-   
+   var id=(id.indexOf('@')===-1)?{_id:id}:{emailid:id};
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {
                var query={password:hash};

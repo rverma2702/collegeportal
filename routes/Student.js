@@ -7,6 +7,7 @@ var Grv=require('../models/grievancedb');
 var session = require('express-session'); 
 var sess;
 var bcrypt = require('bcryptjs');
+var generator = require('generate-password');
 var nodemailer = require("nodemailer");
 var smtpTransport = nodemailer.createTransport({
   service: "Gmail",
@@ -138,10 +139,8 @@ Student.getinfobyID(req.session.user,function(err, user){
         Student.comparePassword(cpass, user.password, function(err, isMatch){
             if(err) throw err;
               if(isMatch){
-
-                  var id={ _id:sess.user };
                   
-                Student.update_password(id,npass,function(err){
+                Student.update_password(sess.user,npass,function(err){
                    if(err) throw err;
                  else
                  {
@@ -181,7 +180,7 @@ Student.getinfobyID(req.session.user,function(err, user){
           return;
       }
      //console.log('object id is '+user._id);
-     if(user.status=='approved')
+     if(user.access=='approved')
      {
       Student.comparePassword(password, user.password, function(err, isMatch){
         if(err) throw err;
@@ -192,12 +191,11 @@ Student.getinfobyID(req.session.user,function(err, user){
           sess.type="Student";
           sess.email=user.emailid;
           sess.active=1;  
-          //res.redirect('/Student/Home');
           res.send('success');
         }
         else{
           console.log('invalid password');
-          //res.redirect('/Student/pass');
+        
           res.status(500).send('pass');
           return;
         }
@@ -417,6 +415,44 @@ console.log('id is '+req.query.id);
   }
   });
   
+
+
+  router.post('/forgot_pass',function(req,res,next){
+
+   var id=req.body.id;
+    Student.getUserByID(id,function(err, user){
+      if(err) throw err;
+      if(!user){
+          console.log("unknown user");
+          //res.redirect('/Student/unknw');
+          res.status(500).send('Unauthorized User');
+          return;
+      }
+      /*var password = generator.generate({
+        length: 10,
+        numbers: true
+    });*/
+    var password='sahil';
+    Student.update_password(id,password,function(err){
+     if(err) throw err;
+      
+     host=req.get('host');
+     mailOptions={
+         to : id,
+         subject : "Password Updated",
+         html : "Hello,<br> your new password for EduGrievance Portal is: <br>"+password+"<br> Thanks and Regards <br> <b>Anand International College Of Engineering</b>" 
+     }
+     console.log(mailOptions);
+     smtpTransport.sendMail(mailOptions, function(error, response){
+      if(error) throw err;
+      else{
+          console.log("Message sent: " + response.message);
+          res.send('success');       
+            }
+ });
+    });
+    }); 
+  });
 
 
 

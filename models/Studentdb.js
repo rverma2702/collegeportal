@@ -72,13 +72,11 @@ module.exports.getinfobyID = function(id, callback){
 }
 module.exports.updateuser = function(id,newvalues, callback){
      //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
-    //var query={_id:id};
     var query=id;
     Student.updateOne(query,newvalues,callback);
  }
  module.exports.update_password = function(id,password, callback){
-    //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
-   //var query={_id:id};
+    var id = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {
                var query={password:hash};
@@ -95,6 +93,7 @@ module.exports.updateuser = function(id,newvalues, callback){
     //Student.find({status:{$ne:'pending'}},callback);
     Student.find({$and:[{status:'verified'},{access:query}]},callback);
 }
+
 module.exports.createUser = function(newUser, callback){
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(newUser.password, salt, function(err, hash) {

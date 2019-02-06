@@ -21,7 +21,7 @@ var ParentSchema = mongoose.Schema({
      type:String
     },
     access:{
-      Type:String
+      type:String
     },
     Cdate:{
    type:String
@@ -48,7 +48,7 @@ var Parent = module.exports = mongoose.model('Parent',ParentSchema,'Parent');
 }*/
 
 module.exports.getUserByID = function(id, callback){
-    var query = (id.indexOf('@') === -1) ? {mobileno: id} : {emailid: id};
+    var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
     Parent.findOne(query, callback);
 }
 module.exports.getinfobyID = function(id, callback){
@@ -62,7 +62,7 @@ module.exports.updateuser = function(id,newvalues, callback){
    Parent.updateOne(id, newvalues,callback);
 }
 module.exports.update_password = function(id,password, callback){
-    //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
+    var id = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
    //var query={_id:id};
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {

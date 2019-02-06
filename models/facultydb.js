@@ -17,7 +17,7 @@ var FacultySchema = mongoose.Schema({
         type:String
     },
     access:{
-       Type:String
+       type:String
     },
     gender:{
         type: String,
@@ -61,8 +61,7 @@ Faculty.apprv_find=function(query,callback)
 }
 
 module.exports.update_password = function(id,password, callback){
-    //var query = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
-   //var query={_id:id};
+    var id = (id.indexOf('@') === -1) ? {_id: id} : {emailid: id};
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {
                var query={password:hash};

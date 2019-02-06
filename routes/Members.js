@@ -134,11 +134,8 @@ function requireLogin(req, res, next) {
           Member.comparePassword(cpass, user.password, function(err, isMatch){
               if(err) throw err;
                 if(isMatch){
-  
-                    var id={ _id:sess.user };
-                    //console.log('id is '+sess.user.id);
                     if(npass==npass2){
-                  Member.update_password(id,npass,function(err){
+                  Member.update_password(sess.user,npass,function(err){
                      if(err) throw err;
                    else
                    {
@@ -213,20 +210,53 @@ function requireLogin(req, res, next) {
         }
         else{
           console.log('invalid password');
-          //res.redirect('/Members/pass');
           res.status(500).send('pass');
         }
       })
-      /*sess.user=user._id;
-      sess.type='Members';
-      sess.active=1;
-    */
         });
     }
     else{
       res.status(500).send('some');
     }
   });
+
+  router.post('/forgot_pass',function(req,res,next){
+
+    var id=req.body.id;
+     Member.getUserByID(id,function(err, user){
+       if(err) throw err;
+       if(!user){
+           console.log("unknown user");
+           //res.redirect('/Student/unknw');
+           res.status(500).send('Unauthorized User');
+           return;
+       }
+       /*var password = generator.generate({
+         length: 10,
+         numbers: true
+     });*/
+     var password='sahil';
+     Member.update_password(id,password,function(err){
+      if(err) throw err;
+       
+      host=req.get('host');
+      mailOptions={
+          to : id,
+          subject : "Password Updated",
+          html : "Hello,<br> your new password for EduGrievance Portal is: <br>"+password+"<br> Thanks and Regards <br> <b>Anand International College Of Engineering</b>" 
+      }
+      console.log(mailOptions);
+      smtpTransport.sendMail(mailOptions, function(error, response){
+       if(error) throw err;
+       else{
+           console.log("Message sent: " + response.message);
+           res.send('success');       
+             }
+  });
+     });
+     }); 
+   });
+
 
      router.get('/grievance_type',requireLogin,function(req,res,next){
     console.log('hiitype'); 

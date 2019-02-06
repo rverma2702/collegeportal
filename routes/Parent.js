@@ -54,20 +54,6 @@ function requireLogin(req, res, next) {
   var cpass=req.body.current_password;
   var  npass=req.body.new_password;
   var npass2=req.body.new_password1;
- //req.checkBody('cpass','password field is required').notEmpty();
-  //req.checkBody('npass','password field is required').notEmpty();
-  //req.checkBody('npass2','password do not match').equals(npass);
-
-  /*var errors=req.validationErrors();
-  if(errors)
-  { console.log(errors);
-      res.render('err_valid',{
-    errors: errors
-  });
-    console.log('errors in validation');
-    
-  }
-  else{*/
 
 Parent.getinfobyID(req.session.user,function(err, user){
   if(err) throw err;
@@ -80,11 +66,7 @@ Parent.getinfobyID(req.session.user,function(err, user){
         Parent.comparePassword(cpass, user.password, function(err, isMatch){
             if(err) throw err;
               if(isMatch){
-
-                  var id={ _id:sess.user };
-                  //console.log('id is '+sess.user.id);
-                  
-                Parent.update_password(id,npass,function(err){
+                Parent.update_password(sess.user,npass,function(err){
                    if(err) throw err;
                  else
                  {
@@ -142,15 +124,6 @@ router.get('/My_Grievances',requireLogin,function(req,res,next){
 router.get('/Home',requireLogin, function(req, res, next) {
   res.render('Pdash',{title:'Parent'});
 });
-router.get('/sahil',requireLogin, function(req, res, next) {
-  //res.render('Pdash',{title:'Parent'});
-var data="sahil"
-  res.send(data);
-});
-router.post('/bafna',requireLogin, function(req, res, next) {
-  //res.render('Pdash',{title:'Parent'});
-console.log(req.body.name +" "+ req.body.relation)
-});
 router.get('/complaint',requireLogin ,function(req, res, next) {
   res.render('post',{title:'Parent'});
 });
@@ -158,15 +131,12 @@ router.get('/complaint',requireLogin ,function(req, res, next) {
   router.get('/err_valid', requireLogin,function(req, res, next) {
     res.render('err_valid',{title:'Faculty_Login'});
   });
-  router.get('/update',requireLogin, function(req, res, next) {
-    res.render('pupdt',{title:'Parent '});
-  });
-  //var sess;
   router.post('/login',function(req,res,next){
     sess=req.session;
     if(!sess.user)
     {
     var id=req.body.id;
+    console.log(id);
     var password=req.body.password;
   
     Parent.getUserByID(id,function(err, user){
@@ -177,37 +147,28 @@ router.get('/complaint',requireLogin ,function(req, res, next) {
           res.status(500).send('Unauthorized User');
           return;
       }
-      if(user.status=='approved')
+      console.log(user.access);
+      if((user.access)=='approved')
      {
       Parent.comparePassword(password, user.password, function(err, isMatch){
         if(err) throw err;
         if(isMatch){
         console.log('login successful');         
-        if(user.status=='verified')
-           {sess.ver=1;
-           }
-           else
-           {
-             sess.ver=0;
-             sess.email=user.emailid;
-          }
+
           sess.user=user._id;
           sess.type="Parent";
           sess.email=user.emailid;
           sess.active=1;
-          //res.redirect('/Parent/Home');
           res.send('success');
         }
         else{
           console.log('invalid password');
-          //res.redirect('/pass');
           res.status(500).send('pass');
           return;
         }
       })}
       else{
-        console('user not approved by admin')
-        //res.redirect('/')
+        console.log('user not approved by admin');
         res.status(500).send('not apprv');
       }
 
@@ -398,7 +359,45 @@ console.log('id is '+req.query.id);
       res.end("<h1>Request is from unknown source");
   }
   });
+
   
+
+  router.post('/forgot_pass',function(req,res,next){
+
+    var id=req.body.id;
+     Parent.getUserByID(id,function(err, user){
+       if(err) throw err;
+       if(!user){
+           console.log("unknown user");
+           //res.redirect('/Student/unknw');
+           res.status(500).send('Unauthorized User');
+           return;
+       }
+       /*var password = generator.generate({
+         length: 10,
+         numbers: true
+     });*/
+     var password='sahil';
+     Parent.update_password(id,password,function(err){
+      if(err) throw err;
+       
+      host=req.get('host');
+      mailOptions={
+          to : id,
+          subject : "Password Updated",
+          html : "Hello,<br> your new password for EduGrievance Portal is: <br>"+password+"<br> Thanks and Regards <br> <b>Anand International College Of Engineering</b>" 
+      }
+      console.log(mailOptions);
+      smtpTransport.sendMail(mailOptions, function(error, response){
+       if(error) throw err;
+       else{
+           console.log("Message sent: " + response.message);
+           res.send('success');       
+             }
+  });
+     });
+     }); 
+   });
 
   router.get('/grievance_type',requireLogin,function(req,res,next){
     console.log('hiitype'); 

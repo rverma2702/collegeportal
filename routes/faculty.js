@@ -147,9 +147,9 @@ router.get('/complaint',requireLogin, function(req, res, next) {
               if(err) throw err;
                 if(isMatch){
   
-                    var id={ _id:sess.user };
                     
-                  faculty.update_password(id,npass,function(err){
+                    
+                  faculty.update_password(sess.user,npass,function(err){
                      if(err) throw err;
                    else
                    {
@@ -185,7 +185,7 @@ router.get('/complaint',requireLogin, function(req, res, next) {
           res.status(500).send('Unauthorized User');
           return;
       }
-      if(user.status=='approved')
+      if(user.access=='approved')
       {
       faculty.comparePassword(password, user.password, function(err, isMatch){
         if(err) throw err;
@@ -196,7 +196,6 @@ router.get('/complaint',requireLogin, function(req, res, next) {
           sess.type="faculty";
           sess.active=1;
          sess.email=user.emailid;
-          //res.redirect('/faculty/Home');
           res.send('success');
     
         }
@@ -375,6 +374,44 @@ console.log('id is '+req.query.id);
   }
   });
   
+
+  router.post('/forgot_pass',function(req,res,next){
+
+    var id=req.body.id;
+     faculty.getUserByID(id,function(err, user){
+       if(err) throw err;
+       if(!user){
+           console.log("unknown user");
+           //res.redirect('/Student/unknw');
+           res.status(500).send('Unauthorized User');
+           return;
+       }
+       /*var password = generator.generate({
+         length: 10,
+         numbers: true
+     });*/
+     var password='sahil';
+     faculty.update_password(id,password,function(err){
+      if(err) throw err;
+       
+      host=req.get('host');
+      mailOptions={
+          to : id,
+          subject : "Password Updated",
+          html : "Hello,<br> your new password for EduGrievance Portal is: <br>"+password+"<br> Thanks and Regards <br> <b>Anand International College Of Engineering</b>" 
+      }
+      console.log(mailOptions);
+      smtpTransport.sendMail(mailOptions, function(error, response){
+       if(error) throw err;
+       else{
+           console.log("Message sent: " + response.message);
+           res.send('success');       
+             }
+  });
+     });
+     }); 
+   });
+
   router.get('/grievance_type',requireLogin,function(req,res,next){
     console.log('hiitype'); 
     console.log(req.session.email)

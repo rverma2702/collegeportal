@@ -935,11 +935,7 @@ admin.getinfobyID(req.session.user,function(err, user){
         admin.comparePassword(cpass, user.password, function(err, isMatch){
             if(err) throw err;
               if(isMatch){
-
-                  var id={ _id:sess.user };
-                  //console.log('id is '+sess.user.id);
-                  
-                admin.update_password(id,npass,function(err){
+                admin.update_password(sess.user,npass,function(err){
                    if(err) throw err;
                  else
                  {
@@ -1003,6 +999,45 @@ if(!sess.user){
       res.status(500).send('some');
     }
     });
+
+
+    router.post('/forgot_pass',function(req,res,next){
+
+      var id=req.body.id;
+       admin.getUserByID(id,function(err, user){
+         if(err) throw err;
+         if(!user){
+             console.log("unknown user");
+             //res.redirect('/Student/unknw');
+             res.status(500).send('Unauthorized User');
+             return;
+         }
+         /*var password = generator.generate({
+           length: 10,
+           numbers: true
+       });*/
+       var password='sahil';
+       admin.update_password(id,password,function(err){
+        if(err) throw err;
+         
+        host=req.get('host');
+        mailOptions={
+            to : id,
+            subject : "Password Updated",
+            html : "Hello,<br> your new password for EduGrievance Portal is: <br>"+password+"<br> Thanks and Regards <br> <b>Anand International College Of Engineering</b>" 
+        }
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+         if(error) throw err;
+         else{
+             console.log("Message sent: " + response.message);
+             res.send('success');       
+               }
+    });
+       });
+       }); 
+     });
+  
 
 
 // author: Ankit Sharma
@@ -1082,42 +1117,3 @@ date: 31/10/2018 */
 
 */
 module.exports = router;
-
-const promiseChaining = (req, res, next) => {
-  let rsp = {};
-  const company = new Company({
-      name: 'FullStackhour'
-  });
-  company.save()
-      .then(savedCompany => {
-          rsp.company = savedCompany;
-          const job = new Job({
-              title: 'Node.js Developer',
-              _company: rsp.company._id
-          });
-          return job.save();
-      })
-      .then(savedJob => {
-          const application = new Application({
-              _job: savedJob._id,
-              _company: rsp.company._id
-          });
-          rsp.job = savedJob;
-          return application.save();
-      })
-      .then(savedApp => {
-          const licence = new Licence({
-              name: 'FREE',
-              _application: savedApp._id
-          });
-          rsp.application = savedApp;
-          return licence.save();
-      })
-      .then(savedLic => {
-          rsp.licence = savedLic;
-          return res.json(rsp);
-      })
-      .catch(err => {
-          return next(err);
-      })
-}

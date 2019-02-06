@@ -48,17 +48,18 @@ module.exports.getinfobyID = function(id, callback){
 module.exports.updateuser = function(id,newvalues, callback){
     mngmnt.updateOne(id, newvalues,callback);
  }
-module.exports.comparePassword = function(candidatePassword, hash, callback){
+/*module.exports.comparePassword = function(candidatePassword, hash, callback){
     bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
         callback(null, isMatch);
     });
-}
+}*/
 module.exports.comparePassword = function(candidatePassword, hash, callback){
     bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
         callback(null, isMatch);
     });
 }
 module.exports.update_password = function(id,password, callback){
+    var id=(id.indexOf('@')===-1)?{_id:id}:{emailid:id};
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(password, salt, function(err, hash) {
                var query={password:hash};
